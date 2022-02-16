@@ -1,0 +1,1 @@
+export {default as TestReducer} from './test.reducer';
