@@ -1,41 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View,StyleSheet} from 'react-native';
-import * as GETAPI from './src/util/fetchApi';
-import {useDispatch, useSelector} from 'react-redux';
-import { test } from './redux/reducers/test.reducer';
-
+import 'react-native-gesture-handler';
+import { Text, View,StyleSheet,LogBox} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import TabBottomNavigation from './src/components/NavigationBottom/TabBottomNavigation';
+const Stack = createStackNavigator();
 
 const App = ()=>{
-    const usedispatch = useDispatch();
-    const testw = useSelector((state)=>state.TestReducer.tests);
-
-    const a = [
-      {
-        name: "trung",
-        age:20,
-    },
-    {
-      name:"ta",
-      age:15
-    }
-
-    ]
-
-    useEffect(() => {
-      
-      usedispatch(test(a));
-      console.log("dang thu ne")
-    },[])
-
-    useEffect(() => {
-      
-      console.log("day ne",testw)
-    },[])
-
+  LogBox.ignoreLogs([
+    "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+  ]);
   return(
-    <View style={styles.container}>
-      <Text>Xin chao cac ban</Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName='home'
+        screenOptions={{ headerShown:false }}
+      >
+        <Stack.Screen name='home' component={TabBottomNavigation} />
+
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 
