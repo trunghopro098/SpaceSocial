@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import 'react-native-gesture-handler';
-import { Text, View,StyleSheet,LogBox} from 'react-native';
+import { StyleSheet,LogBox, StatusBar} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import TabBottomNavigation from './src/components/NavigationBottom/TabBottomNavigation';
+import Login from './src/components/StartScreens/Login';
+import Register from './src/components/StartScreens/Register';
+
 const Stack = createStackNavigator();
 
 const App = ()=>{
@@ -12,12 +15,16 @@ const App = ()=>{
   ]);
   return(
     <NavigationContainer>
+      <StatusBar 
+      backgroundColor={'#F7F7F7'}
+      barStyle={'dark-content'}/>
       <Stack.Navigator
-        initialRouteName='home'
+        initialRouteName='login'
         screenOptions={{ headerShown:false }}
       >
         <Stack.Screen name='home' component={TabBottomNavigation} />
-
+        <Stack.Screen name='login' component={Login}/>
+        <Stack.Screen name='register' component={Register}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

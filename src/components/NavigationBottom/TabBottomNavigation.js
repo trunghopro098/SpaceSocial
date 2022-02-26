@@ -25,7 +25,9 @@ export default function TabBottomNavigation() {
                     backgroundColor:'white',
                     borderTopLeftRadius:16,
                     borderTopRightRadius:16,
-                    borderWidth:0,
+                    borderTopWidth:1,
+                    elevation:0,
+                    borderTopColor: 'white',
                     
                     
                     

@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function ChatScreen() {
   return (
-    <View>
+    <View style={{ backgroundColor:'#F7F7F7', flex:1 }}>
       <Text>chatScreen</Text>
     </View>
   )
