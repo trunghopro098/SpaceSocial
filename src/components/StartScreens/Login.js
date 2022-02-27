@@ -2,6 +2,7 @@ import React, { useState,useRef,useEffect } from 'react'
 import { View, Text, Dimensions, StyleSheet,Image, TextInput, TouchableOpacity,ToastAndroid } from 'react-native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage  from '@react-native-async-storage/async-storage'
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { LinearTextGradient } from 'react-native-text-gradient';
@@ -30,9 +31,9 @@ export default function Login({navigation, route}){
     },[])
 
     const handlesubmit = async(values,{setErrors})=>{
-        console.log(values)
+        // console.log(values)
         const res = await GETAPI.postDataAPI('user/login',{'data':values});
-        console.log("day la log : ",res)
+        // console.log("day la log : ",res)
         if(res.msg === "Invalid account"){
             setErrors({username:'Tài khoản không tồn tại!'})
         }else if(res.msg === "Incorrect password"){
@@ -44,6 +45,9 @@ export default function Login({navigation, route}){
                 ToastAndroid.SHORT,
                 ToastAndroid.CENTER
               );
+            await AsyncStorage.setItem('token',res.token);
+            const a = await AsyncStorage.getItem('token');
+            // console.log('..............: ', a)
             navigation.replace('home')
         }
         

@@ -1,9 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
-import { TestReducer } from './reducers';
+import { TestReducer, UserReducer } from './reducers';
 
 const rootReducer = combineReducers({
-    TestReducer
+    TestReducer,
+    UserReducer
 });
 
 
