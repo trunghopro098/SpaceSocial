@@ -14,7 +14,7 @@ import Feather from 'react-native-vector-icons/Feather';
         .required('Nhập tên đăng nhập !')
         .test("username_async_validation", "Tài khoản đã tồn tại",async function (value) {
                 // console.log(value)
-                let res = await GETAPI.postDataAPI("user/checkUsername",{'username':`${value}`});
+                let res = await GETAPI.postDataAPI("/user/checkUsername",{'username':`${value}`});
                 // console.log(res)
                 if(res.msg==="The Username already in use"){
                     return false
@@ -37,7 +37,7 @@ import Feather from 'react-native-vector-icons/Feather';
         .required('Nhập email!')
         .test("Email_async_validation", "Email đã tồn tại",async function (value) {
             console.log(value)
-            let res = await GETAPI.postDataAPI("user/checkEmail",{'email':value});
+            let res = await GETAPI.postDataAPI("/user/checkEmail",{'email':value});
             console.log(res)
             if(res.msg==="The Email already in use"){
                 return false
@@ -64,7 +64,7 @@ export default function Register({navigation}) {
     const handleSignUp = async (value)=>{
         // console.log(formRef.current.values.username)
         console.log(value)
-        const res = await GETAPI.postDataAPI("user/register",{'data':value});
+        const res = await GETAPI.postDataAPI("/user/register",{'data':value});
         console.log('ddaay laf log',res)
         console.log('day laf log',res)
         if(res.msg==='Success'){

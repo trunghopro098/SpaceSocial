@@ -32,7 +32,7 @@ export default function Login({navigation, route}){
 
     const handlesubmit = async(values,{setErrors})=>{
         // console.log(values)
-        const res = await GETAPI.postDataAPI('user/login',{'data':values});
+        const res = await GETAPI.postDataAPI('/user/login',{'data':values});
         // console.log("day la log : ",res)
         if(res.msg === "Invalid account"){
             setErrors({username:'Tài khoản không tồn tại!'})

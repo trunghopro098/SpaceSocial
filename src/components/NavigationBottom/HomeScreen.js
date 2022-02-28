@@ -16,7 +16,7 @@ export default function HomeScreen() {
   
   const getDataPost = async()=>{
       const data = {idUser:currentUser.idUser};
-      const res = await GETAPI.postDataAPI("post/getPostById",data);
+      const res = await GETAPI.postDataAPI("/post/getPostById",data);
       console.log('aaaa',res);
   }
 
