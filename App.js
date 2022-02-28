@@ -24,7 +24,7 @@ const dispath = useDispatch();
   return(
     <NavigationContainer>
       <StatusBar 
-      backgroundColor={'#F7F7F7'}
+      backgroundColor={'white'}
       barStyle={'dark-content'}/>
       <Stack.Navigator
         initialRouteName='splash'

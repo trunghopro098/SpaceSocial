@@ -11,7 +11,7 @@ export default function Splash({navigation}) {
     useEffect(() => {
       Animated.timing(facetim,{
           toValue: 1,
-          duration: 5000,
+          duration: 4000,
         useNativeDriver: true 
       }).start( async()=>{
         CheckAuths()
