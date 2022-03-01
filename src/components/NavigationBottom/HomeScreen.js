@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,8 @@ import { updatePostData } from '../../../redux/reducers/post.reducers';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Post from '../ScreenComponents/Post';
+import News from '../ScreenComponents/News';
+import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
 export default function HomeScreen() {
   const [showContent, setshowContent] = useState(false);
   const {dataPost, listLike} = useSelector((value)=>value.PostReducer)
@@ -27,31 +29,56 @@ export default function HomeScreen() {
       setshowContent(true);
 
   }
+  const data = [
+    {
+        id:1,
+        image:require('../../../assets/img/anh900080.jpg'),
+        name: 'Thành',
+    },
+    {
+        id:2,
+        image:require('../../../assets/img/avatar.jpg'),
+        name: 'Chiến',
+    },
+    {
+        id:3,
+        image: require('../../../assets/img/anh900080.jpg'),
+        name: 'Trung',
+    },
+    {
+        id:4,
+        image: require('../../../assets/img/avatar.jpg'),
+        name: 'An',
+    },
+    {
+        id:5,
+        image:require('../../../assets/img/anh900080.jpg'),
+        name:'Thuần',
+    },
+]
 
   return (
     <View style={styles.container}>
       {/* header */}
-      <View style={styles.header}>
-        <LinearTextGradient
-          locations={[0,1]}
-          colors={['red','blue']}
-          start={{ x:0,y:0 }}
-          end={{ x:1, y:0 }}
-        >
-            <Text style={{ fontSize: 20 , fontWeight: 'bold' }}>SPACE SOCIAL</Text>
-        </LinearTextGradient>
-        <View style={styles.search}>
-              <EvilIcons name='search' size={28}/>
+        <View style={styles.header}>
+              <LinearTextGradient
+                  locations={[0,1]}
+                  colors={['red','blue']}
+                  start={{ x:0,y:0 }}
+                  end={{ x:1, y:0 }}
+              >
+                  <Text style={{ fontSize: 20 , fontWeight: 'bold' }}>SPACE SOCIAL</Text>
+              </LinearTextGradient>
+              <TouchableOpacity style={styles.search}>
+                    <EvilIcons name='search' size={28}/>
+              </TouchableOpacity>
         </View>
-      </View>
-    {/* new */}
-    {/* post */}
-      <Post name={'ho van trung'} DataPost={dataPost}/>
-      <View >
-        {showContent?console.log('day laf reducer',dataPost):console.log('nullllll')}
-         <Text>header</Text>
-      </View>
-      
+        <VirtualizedViewFlaslist>
+              {/* new */}
+                <News Data={data}/>
+              {/* post */}
+                <Post name={'ho van trung'} DataPost={dataPost}/>  
+        </VirtualizedViewFlaslist>
     </View>
   )
 }
@@ -64,7 +91,8 @@ const styles = StyleSheet.create({
   header:{
     flexDirection: 'row',
     justifyContent:'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    paddingBottom: 5,
     marginTop: 10
 
   },
@@ -76,7 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor:'white',
-    marginRight: 15,
+    marginRight: 5,
     shadowColor:'#000',
     shadowOffset:{
       width: 0,
