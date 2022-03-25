@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { memo,useEffect, useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserReducer } from '../../../redux/reducers';
@@ -10,7 +10,9 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Post from '../ScreenComponents/Post';
 import News from '../ScreenComponents/News';
 import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
-export default function HomeScreen() {
+import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
+// import TruncateText from '../../util/TruncateText';
+ function HomeScreen() {
   const [showContent, setshowContent] = useState(false);
   const {dataPost, listLike} = useSelector((value)=>value.PostReducer)
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
@@ -18,6 +20,7 @@ export default function HomeScreen() {
   useEffect(() => {
     if(currentUser !== null){
       getDataPost();
+      getRomChat();
     }
     
   }, [])
@@ -25,10 +28,19 @@ export default function HomeScreen() {
       const data = {idUser:currentUser.idUser};
       const res = await GETAPI.postDataAPI("/post/getPostById",data);
       dispath(updatePostData(res.msg))
-      // console.log('aaaa',res);
+      // console.log(res.msg[4].arr_img);
       setshowContent(true);
 
   }
+
+  const getRomChat = async()=>{
+    const data = {idUser: currentUser.idUser};
+    const res = await GETAPI.postDataAPI("/messenges/getListCovensation", data);
+    // console.log(res)
+    dispath(updateListRoom(res.msg))
+    console.log('log xong')
+}
+
   const data = [
     {
         id:1,
@@ -60,6 +72,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       {/* header */}
+      {/* <TruncateText/> */}
         <View style={styles.header}>
               <LinearTextGradient
                   locations={[0,1]}
@@ -77,12 +90,12 @@ export default function HomeScreen() {
               {/* new */}
                 <News Data={data}/>
               {/* post */}
-                <Post name={'ho van trung'} DataPost={dataPost}/>  
+                <Post DataPost={dataPost}/>  
         </VirtualizedViewFlaslist>
     </View>
   )
 }
-
+export default memo(HomeScreen);
 const styles = StyleSheet.create({
   container: {
     flex:1,

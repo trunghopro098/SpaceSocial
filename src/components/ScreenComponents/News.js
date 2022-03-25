@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
-import React from 'react'
+import React, {memo} from 'react'
 import { windowH, windowW } from '../../util/Dimension'
 
-export default function News({Data}) {
+function News({Data}) {
     
     const renderItem = ({item})=>{
         return(
             <View style={styles.wrapNews}>
                 <View style={styles.wrapImage}>
-                    {console.log(`${item.image}`)}
+                    {/* {console.log(`${item.image}`)} */}
                     <Image
                         source={item.image}
                         resizeMode='cover'
@@ -33,6 +33,7 @@ export default function News({Data}) {
     </View>
   )
 }
+export default memo(News);
 const styles = StyleSheet.create({
     container:{
         width: '100%',

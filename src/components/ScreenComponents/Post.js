@@ -1,5 +1,5 @@
 import { View, Text,FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React,{memo, useState} from 'react'
 import { windowH, windowW } from '../../util/Dimension'
 import { SetHTTP } from '../../util/SetHTTP'
 import {API_URL} from "@env"
@@ -8,10 +8,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { timeAgo } from '../../util/timeAgo'
-export default function Post({DataPost}) {
-    console.log("day lad pros",DataPost)
-    console.log(Date.now())
+import { timeAgo } from '../../util/timeAgo';
+import LayoutImgPost from '../../components/ScreenComponents/LayoutImgPost'
+import SubStr from '../StartScreens/SubStr'
+
+
+function Post({DataPost}) {
+
     const CurrentDay = Date.now();
     const renderItem = ({item})=>{
         return(
@@ -60,22 +63,16 @@ export default function Post({DataPost}) {
                 </View>
                 <View style={styles.postContent}>
                     <View style={styles.messageContent}>
-                            <Text style={{ maxWidth: '90%', color:'black' }}>{item.message}</Text>
+                            {/* <Text style={{ maxWidth: '90%', color:'black' }}>{item.message}</Text> */}
+                           <SubStr text={item.message} lengths={200}/>
                     </View>
-                    {item.image_description==='null'?
-                    null:
-                        <Image 
-                        source={{ uri:SetHTTP(item.image_description)}}
-                        style={{ width: '95%', height: '95%', borderRadius: 10 }}
-                        resizeMode='contain'
-                        />
-                    }
-
+                    <LayoutImgPost image={item.arr_img}/>
                 </View>
                 <View style={ styles.numberlikeAndComment }>
                     <TouchableOpacity style={styles.itemumberlikeAndComment}>
-                        <AntDesign name='like2' size={19}/>
-                        <Text style={{ marginLeft: 5 }}>{item.numberEmotion!=='null'?item.numberEmotion:0}</Text>
+                        {/* <AntDesign name='like2' size={19}/> */}
+                        <Text>{item.numberEmotion=='null'?item.numberEmotion:null}</Text>
+                        <Text style={{ marginLeft: 5 }}>Lượt Thích</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.itemumberlikeAndComment}>
                         <Text>{item.numberEmotion!=='null'?item.numberEmotion:0}</Text>
@@ -105,30 +102,26 @@ export default function Post({DataPost}) {
         )
     }
   return (
-    <View style={styles.container}>
-      <FlatList
+  
+    <FlatList
         data={DataPost}
         renderItem={renderItem}
         keyExtractor={item=>item.id}
         showsVerticalScrollIndicator={false}
-      />
-    </View>
+        style={{ flex:1,width: windowW, marginBottom: 70}}
+    />
+    
   )
 }
+export default memo(Post);
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        paddingBottom: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+
     wrapItemPost: {
         marginHorizontal: 5,
         marginTop: 10,
         marginBottom: 15,
         alignItems: 'center',
-        width: windowW*0.93,
-        maxHeight: windowH*0.6,
+        height: 'auto',
         borderRadius: 10,
         shadowColor:'#000',
         shadowOffset:{
@@ -138,7 +131,9 @@ const styles = StyleSheet.create({
         shadowOpacity: .6,
         shadowRadius: 2,
         elevation: 1,
-        padding: 10
+        padding: 10,
+ 
+        marginBottom:10
     },
     avatar:{
         width: 60,
@@ -153,11 +148,12 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 2,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        
     },
     headerPost:{
         width: '100%',
-        height: '17%',
+        height: 56,
         borderBottomWidth: 0.5,
         borderBottomColor: '#C1C1C1',
         paddingBottom: 10,
@@ -174,7 +170,6 @@ const styles = StyleSheet.create({
 
         marginTop: 5,
         width: '100%',
-        maxHeight: '65%',
         flexDirection:'column',
         alignItems:'center'
         
@@ -187,7 +182,7 @@ const styles = StyleSheet.create({
     },
     likeAndComment:{
         width: '100%',
-        height: '10%',
+        height: 30,
         marginTop: 5,
         flexDirection:'row',
         justifyContent: 'space-between',
@@ -198,7 +193,7 @@ const styles = StyleSheet.create({
     },
     numberlikeAndComment:{
         width: '100%',
-        height: '6%',
+        height: 30,
         marginTop: 5,
         marginBottom:1,
         flexDirection:'row',

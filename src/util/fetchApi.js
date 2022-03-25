@@ -1,7 +1,7 @@
 import {API_URL} from "@env";
 // const API_URL = 'http://192.168.43.41:5000/'
 export const getAPI = async(url)=>{
-    console.log(API_URL)
+    // console.log(API_URL)
     const res = await fetch(API_URL+url)
     .then((response)=>response.json())
     .then((responseJson)=>{
@@ -14,7 +14,7 @@ export const getAPI = async(url)=>{
 }
 
 export const postDataAPI = async(url,data)=>{
-    console.log(API_URL)
+    // console.log(API_URL)
     const res = await fetch(API_URL+url,{
         method:'POST',
         headers:{

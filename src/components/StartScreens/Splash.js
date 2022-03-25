@@ -26,7 +26,7 @@ export default function Splash({navigation}) {
 
     const CheckAuths = async()=>{
         const statusAuth = await CheckAuth(dispath);
-        console.log(statusAuth)
+        // console.log(statusAuth)
         if(statusAuth){
             navigation.replace('home')
             
