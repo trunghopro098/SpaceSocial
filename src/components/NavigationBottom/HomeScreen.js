@@ -38,7 +38,7 @@ import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
     const res = await GETAPI.postDataAPI("/messenges/getListCovensation", data);
     // console.log(res)
     dispath(updateListRoom(res.msg))
-    console.log('log xong')
+    // console.log('log xong')
 }
 
   const data = [
