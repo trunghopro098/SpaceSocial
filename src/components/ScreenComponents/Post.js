@@ -95,7 +95,7 @@ function Post({DataPost}) {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.itemumberlikeAndComment}>
                         <EvilIcons name='share-google' size={19}/>
-                        <Text style={{ marginLeft: 5 }}>Chia sẽ</Text>
+                        <Text style={{ marginLeft: 5 }}>Chia sẻ</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -117,23 +117,23 @@ export default memo(Post);
 const styles = StyleSheet.create({
 
     wrapItemPost: {
-        marginHorizontal: 5,
+        backgroundColor: 'white',
+        marginHorizontal: 10,
         marginTop: 10,
         marginBottom: 15,
         alignItems: 'center',
         height: 'auto',
-        borderRadius: 10,
-        shadowColor:'#000',
-        shadowOffset:{
+        shadowColor: "#000",
+        shadowOffset: {
             width: 0,
-            height:2,
+            height: 2,
         },
-        shadowOpacity: .6,
-        shadowRadius: 2,
-        elevation: 1,
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
         padding: 10,
- 
-        marginBottom:10
+        marginBottom:10,
+        borderRadius:10
     },
     avatar:{
         width: 60,

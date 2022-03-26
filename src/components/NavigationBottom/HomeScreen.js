@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { memo,useEffect, useState } from 'react'
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
-import { UserReducer } from '../../../redux/reducers';
 import * as GETAPI from '../../util/fetchApi'; 
 import { updatePostData } from '../../../redux/reducers/post.reducers';
 import { LinearTextGradient } from 'react-native-text-gradient';
@@ -11,8 +9,9 @@ import Post from '../ScreenComponents/Post';
 import News from '../ScreenComponents/News';
 import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
 import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // import TruncateText from '../../util/TruncateText';
- function HomeScreen() {
+ function HomeScreen({navigation}) {
   const [showContent, setshowContent] = useState(false);
   const {dataPost, listLike} = useSelector((value)=>value.PostReducer)
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
@@ -82,13 +81,21 @@ import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
               >
                   <Text style={{ fontSize: 20 , fontWeight: 'bold' }}>SPACE SOCIAL</Text>
               </LinearTextGradient>
+              <View style={styles.gruopRight}>
+              <TouchableOpacity 
+                style={{...styles.search,marginRight:15}}
+                onPress={()=>navigation.navigate("scanqr")}
+              >
+                    <MaterialCommunityIcons name='qrcode-scan' size={20}/>
+              </TouchableOpacity>
               <TouchableOpacity style={styles.search}>
                     <EvilIcons name='search' size={28}/>
               </TouchableOpacity>
+              </View>
         </View>
         <VirtualizedViewFlaslist>
               {/* new */}
-                <News Data={data}/>
+              <News Data={data}/>
               {/* post */}
                 <Post DataPost={dataPost}/>  
         </VirtualizedViewFlaslist>
@@ -127,5 +134,8 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 10
     
+  },
+  gruopRight:{
+    flexDirection: 'row'
   }
 })

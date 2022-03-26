@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TabBottomNavigation from './src/components/NavigationBottom/TabBottomNavigation';
 import Login from './src/components/StartScreens/Login';
 import Register from './src/components/StartScreens/Register';
+import ScanQrCode from './src/components/StartScreens/ScanQRCode';
+import ProfileScan from './src/components/StartScreens/ProfileScan';
 import { CheckAuth } from './src/util/checkAuth';
 import { useDispatch } from 'react-redux';
 import Splash from './src/components/StartScreens/Splash';
@@ -33,7 +35,9 @@ const dispath = useDispatch();
         <Stack.Screen name='splash' component={Splash}/>
         <Stack.Screen name='home' component={TabBottomNavigation} />
         <Stack.Screen name='login' component={Login}/>
-        <Stack.Screen name='register' component={Register}/>
+        <Stack.Screen name='register' component={Register} />
+        <Stack.Screen name='scanqr' component={ScanQrCode} options={{headerShown:true,title:"Quét bạn bè"}}/>
+        <Stack.Screen name='profilescan' component={ProfileScan} />
       </Stack.Navigator>
     </NavigationContainer>
   )
