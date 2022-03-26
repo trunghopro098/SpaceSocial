@@ -7,25 +7,39 @@ import { windowW } from '../../util/Dimension';
 import { SetHTTP } from '../../util/SetHTTP';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import { deCode } from '../../util/crypto';
+import { timeAgo } from '../../util/timeAgo';
+import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
 
 export default function ChatScreen() {
   const {currentUser} = useSelector((value)=>value.UserReducer);
   const {listRoom} = useSelector((value)=>value.MessengesReducer);
   const [ListRoomToShow, setListRoomToShow] = useState([])
-
+  const [CurrentTime, setCurrentTime] = useState(0);
   // const dispath = useDispatch();
  
 
   useEffect(() => {
       // console.log(currentUser)
       setListRoomToShow(listRoom);
-      console.log(listRoom)
+      // console.log(listRoom)
   }, [listRoom])
+useEffect(() => {
+  const interval = setInterval(() => {
+      setCurrentTime(Date.now())
+  }, 1000);
+
+  return () => {
+    clearInterval(interval);
+  }
+}, [])
 
 
   const renderItem = ({item})=>{
     return(
-        <View style={styles.chatItem}>
+        <TouchableOpacity style={styles.chatItem}>
             <View style={styles.avatarChatItem}>
                 {item.avatar === null ?
                       <TouchableOpacity>
@@ -52,16 +66,16 @@ export default function ChatScreen() {
                   }   
                       <View style={{ flexDirection:'row' }}>
                           <Text style={{ color: 'gray', fontSize: 13, marginTop: 5 ,fontWeight: 'bold' }}>{item.lastNameSent}: </Text>
-                          <Text style={{ color: 'gray', fontSize: 13, marginTop: 5  }}>{item.message.substring(0,18)+"..."}</Text>
+                          <Text style={{ color: 'gray', fontSize: 13, marginTop: 5  }}>{deCode(item.message).substring(0,18)+"..."}</Text>
                       </View>
 
                   </View>
                       
                   <View style={styles.dateRoomchat}>
-                      <Text>Xin CH</Text>
+                      <Text style={{ marginTop: 25 }}>{timeAgo(CurrentTime, item.update_at)}</Text>
                   </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
   }
 
@@ -87,8 +101,6 @@ export default function ChatScreen() {
                     }
                       <Text style={{ fontWeight:'bold', fontSize: 19, color: 'black', marginLeft: 20 }}>CHAT</Text>
                 </View>
-
-
                 <View style={styles.rightHeader}>
                     <TouchableOpacity>
                         <AntDesign name='addusergroup' size={23} color='black' style={{ marginRight: 20 }}/>
@@ -99,14 +111,20 @@ export default function ChatScreen() {
                 </View>
           </View>
 
-          <View style={styles.Chat}>
+          <VirtualizedViewFlaslist style={styles.Chat}>
+              <View style={styles.search}>
+                <TouchableOpacity style={styles.Itemsearch}>
+                    <Fontisto name='search' size={22} color='gray'/>
+                    <Text style={{ color:'black', fontSize: 13, marginLeft: 10 }}>Tìm kiếm</Text>
+                </TouchableOpacity>
+              </View>
               <FlatList
                   data={ListRoomToShow}
                   keyExtractor={(item)=>item.id}
                   showsVerticalScrollIndicator={false}
                   renderItem={renderItem}
               />
-          </View>
+          </VirtualizedViewFlaslist>
     </View>
   )
 }
@@ -184,7 +202,28 @@ const styles = StyleSheet.create({
   },
   InforRoomChat:{
     flexDirection: 'column',
-    width: '75%',
+    width: '65%',
     backgroundColor:'white'
+  },
+  search:{
+    width: windowW-20,
+    height: 35,
+    // backgroundColor:'red',
+    borderRadius: 40,
+    margin: 10,
+    paddingLeft: 20,
+    borderWidth:0.5,
+    borderColor: 'black',
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignContent:'center',
+    alignItems:'center',
+  },
+  Itemsearch:{
+    width:'100%',
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignContent:'center',
+    alignItems:'center',
   }
 })
