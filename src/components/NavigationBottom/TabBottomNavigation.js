@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet,Dimensions} from 'react-native';
+import {View, Text, StyleSheet,Dimensions,StatusBar} from 'react-native';
 import {createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from './HomeScreen';
 import ChatScreen from './ChatScreen';
@@ -16,6 +16,10 @@ const Tab = createBottomTabNavigator();
 export default function TabBottomNavigation() {
   return (
     <View style={styles.container}>
+        <StatusBar 
+            backgroundColor="rgb(240, 240, 240)"
+            barStyle="dark-content"
+        />
         <Tab.Navigator
             screenOptions={{ 
                 headerShown:false,
@@ -28,9 +32,6 @@ export default function TabBottomNavigation() {
                     borderTopWidth:1,
                     elevation:6,
                     borderTopColor: 'white',
-                    
-                    
-                    
                 }
 
              }}
@@ -61,7 +62,7 @@ export default function TabBottomNavigation() {
                         <View style={{ alignItems : "center", justifyContent : "center",top:3}}>
                             {focused ? <>
                                 <LinearGradient 
-                                     colors={['#a1def5','#7471EF','#7471EF','#9966CB']}
+                                    colors={['#a1def5','#7471EF','#7471EF','#9966CB']}
                                     start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
                                     style={ focused ? styles.focus : null }>
                                     <Ionicons name="chatbubble-ellipses" size={22} color={'white'}/>
@@ -81,7 +82,7 @@ export default function TabBottomNavigation() {
                         <View style={{ alignItems : "center", justifyContent : "center",top:3}}>
                             {focused ? <>
                                 <LinearGradient 
-                                     colors={['#a1def5','#7471EF','#7471EF','#9966CB']}
+                                    colors={['#a1def5','#7471EF','#7471EF','#9966CB']}
                                     start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
                                     style={ focused ? styles.focus : null }>
                                     <AntDesign name="pluscircle" size={22} color={'white'}/>
@@ -121,7 +122,7 @@ export default function TabBottomNavigation() {
                         <View style={{ alignItems : "center", justifyContent : "center",top:3}}>
                             {focused ? <>
                                 <LinearGradient 
-                                     colors={['#a1def5','#7471EF','#7471EF','#9966CB']}
+                                    colors={['#a1def5','#7471EF','#7471EF','#9966CB']}
                                     start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
                                     style={ focused ? styles.focus : null }>
                                     <FontAwesome name="user" size={22} color={'white'}/>

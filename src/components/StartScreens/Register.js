@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput,TouchableOpacity, Image, Button,ScrollView, ToastAndroid} from 'react-native'
+import { View, Text, StyleSheet, TextInput,TouchableOpacity, Image,ScrollView, ToastAndroid} from 'react-native'
 import React, { useRef,useState } from 'react'
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -170,13 +170,13 @@ export default function Register({navigation}) {
                             />
                             <TouchableOpacity
                                 onPress={()=>{
-                                setshowPass(!showPass)
+                                    setshowPass(!showPass)
                                 }}
                                 style={{ 
                                     marginRight: 8,
                                     justifyContent:'center',
                                     alignItems:'center' }}
-                                >
+                            >
                                 {showPass ? <Feather name='eye-off' size={20}/>: <Feather name='eye' size={20}/>} 
                             </TouchableOpacity>
                         </View>
