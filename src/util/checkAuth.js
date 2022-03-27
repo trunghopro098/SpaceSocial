@@ -32,8 +32,8 @@ export const CheckAuth  = async(dispath)=>{
             // console.log('day la fls : ',followers);
             // console.log('day la flg : ',followings);
             dispath(updateUer(res[0]))
-            dispath(updateFollowers(followers))
-            dispath(updateFollowing(followings))
+            dispath(updateFollowers(followers.msg))
+            dispath(updateFollowing(followings.msg))
             return true;
          }
         }

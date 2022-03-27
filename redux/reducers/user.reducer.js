@@ -5,7 +5,9 @@ const userSlice = createSlice({
         currentUser:null,
         followers:[],
         followings:[],
-
+        currentIdRoom:null,
+        userOnline:[],
+        dataFriend:[],
     },
     reducers:{
         updateUer: (state,action)=>{
@@ -16,9 +18,18 @@ const userSlice = createSlice({
         },
         updateFollowing: (state, action)=>{
             state.followings = action.payload;
+        },
+        updateIdRoom: (state,action)=>{
+            state.currentIdRoom = action.payload;
+        },
+        updateUserOnline : (state,action)=>{
+            state.userOnline = action.payload;
+        },
+        updateDataFriend : (state,action)=>{
+            state.dataFriend = action.payload;
         }
     }
 })
 
-export const { updateUer, updateFollowers, updateFollowing } = userSlice.actions;
+export const { updateUer, updateFollowers, updateFollowing, updateIdRoom, updateUserOnline,  } = userSlice.actions;
 export default userSlice.reducer;

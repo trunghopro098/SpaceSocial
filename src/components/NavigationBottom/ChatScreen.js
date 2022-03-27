@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList,StatusBar } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as fecthAPI from '../../util/fetchApi';
@@ -10,52 +10,55 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { deCode } from '../../util/crypto';
 import { timeAgo } from '../../util/timeAgo';
 import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import { LinearTextGradient } from 'react-native-text-gradient';
 
 
-export default function ChatScreen() {
+export default function ChatScreen({navigation}) {
   const {currentUser} = useSelector((value)=>value.UserReducer);
   const {listRoom} = useSelector((value)=>value.MessengesReducer);
   const [ListRoomToShow, setListRoomToShow] = useState([])
   const [CurrentTime, setCurrentTime] = useState(0);
   // const dispath = useDispatch();
- 
+
 
   useEffect(() => {
       // console.log(currentUser)
       setListRoomToShow(listRoom);
       // console.log(listRoom)
   }, [listRoom])
-useEffect(() => {
-  const interval = setInterval(() => {
-      setCurrentTime(Date.now())
-  }, 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setCurrentTime(Date.now())
+    }, 1000);
 
-  return () => {
-    clearInterval(interval);
-  }
-}, [])
+    return () => {
+      clearInterval(interval);
+    }
+  }, [])
 
 
   const renderItem = ({item})=>{
     return(
-        <TouchableOpacity style={styles.chatItem}>
+        <TouchableOpacity
+            onPress={()=>{
+              navigation.navigate('chatdetail',{item: item})
+            }}
+           style={styles.chatItem}>
             <View style={styles.avatarChatItem}>
                 {item.avatar === null ?
-                      <TouchableOpacity>
-                          <Image 
-                          source={require('../../../assets/img/avatar.jpg')}
-                          style={{ width: 50, height: 50, borderRadius:50 }}
+                      
+                    <Image 
+                    source={require('../../../assets/img/avatar.jpg')}
+                    style={{ width: 50, height: 50, borderRadius:50 }}
+                    resizeMode='cover'
+                    />:
+              
+                      <Image
+                          source={{ uri:SetHTTP(item.avatar)}}
                           resizeMode='cover'
-                          />
-                      </TouchableOpacity>:
-                      <TouchableOpacity>
-                            <Image
-                                source={{ uri:SetHTTP(item.avatar)}}
-                                resizeMode='cover'
-                                style={{ width: 50, height: 50, borderRadius: 50 }}
-                              />
-                      </TouchableOpacity>
+                          style={{ width: 50, height: 50, borderRadius: 50 }}
+                        />
+                     
                   }
             </View>
             <View style={styles.rightChatItem}>
@@ -81,14 +84,17 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
+          <StatusBar 
+            backgroundColor={'white'}
+            barStyle={'dark-content'}/>
           <View style={styles.headerChat}>
                 <View style={styles.leftHeader}>
                     {currentUser.avatar === null ?
                         <TouchableOpacity>
                             <Image 
-                            source={require('../../../assets/img/avatar.jpg')}
-                            style={{ width: 48, height: 48, borderRadius:50 }}
-                            resizeMode='cover'
+                              source={require('../../../assets/img/avatar.jpg')}
+                              style={{ width: 48, height: 48, borderRadius:50 }}
+                              resizeMode='cover'
                             />
                         </TouchableOpacity>:
                         <TouchableOpacity>
@@ -99,7 +105,16 @@ useEffect(() => {
                                 />
                         </TouchableOpacity>
                     }
-                      <Text style={{ fontWeight:'bold', fontSize: 19, color: 'black', marginLeft: 20 }}>CHAT</Text>
+                        <LinearTextGradient
+                              locations={[0,1]}
+                              colors={['red','blue']}
+                              start={{ x:0,y:0 }}
+                              end={{ x:1, y:0 }}
+                              style={{ marginLeft: 20 }}
+                          >
+                              <Text style={{ fontWeight:'bold', fontSize: 19, }}>Nhắn Tin</Text>
+                        </LinearTextGradient>
+                      
                 </View>
                 <View style={styles.rightHeader}>
                     <TouchableOpacity>
@@ -114,8 +129,8 @@ useEffect(() => {
           <VirtualizedViewFlaslist style={styles.Chat}>
               <View style={styles.search}>
                 <TouchableOpacity style={styles.Itemsearch}>
-                    <Fontisto name='search' size={22} color='gray'/>
-                    <Text style={{ color:'black', fontSize: 13, marginLeft: 10 }}>Tìm kiếm</Text>
+                    <Fontisto name='search' size={22} color='grey'/>
+                    <Text style={{ color:'grey', fontSize: 13, marginLeft: 10 }}>Tìm kiếm</Text>
                 </TouchableOpacity>
               </View>
               <FlatList
@@ -174,7 +189,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginTop: 5,
     paddingHorizontal: 10,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 0.2,
     borderColor: 'black',
     flexDirection: 'row',
     alignContent:'center',
@@ -207,17 +222,16 @@ const styles = StyleSheet.create({
   },
   search:{
     width: windowW-20,
-    height: 35,
+    height: 40,
     // backgroundColor:'red',
     borderRadius: 40,
     margin: 10,
-    paddingLeft: 20,
-    borderWidth:0.5,
-    borderColor: 'black',
+    paddingLeft: 10,
     flexDirection:'row',
     justifyContent:'flex-start',
     alignContent:'center',
     alignItems:'center',
+    backgroundColor:'#DBDEE5'
   },
   Itemsearch:{
     width:'100%',
@@ -225,5 +239,7 @@ const styles = StyleSheet.create({
     justifyContent:'flex-start',
     alignContent:'center',
     alignItems:'center',
+  
+    
   }
 })

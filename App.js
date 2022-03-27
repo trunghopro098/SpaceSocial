@@ -1,43 +1,57 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import { StyleSheet,LogBox, StatusBar} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import TabBottomNavigation from './src/components/NavigationBottom/TabBottomNavigation';
-import Login from './src/components/StartScreens/Login';
 import Register from './src/components/StartScreens/Register';
 import ScanQrCode from './src/components/StartScreens/ScanQRCode';
 import ProfileScan from './src/components/StartScreens/ProfileScan';
-import { CheckAuth } from './src/util/checkAuth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Splash from './src/components/StartScreens/Splash';
+import ChatDetail from './src/components/ScreenComponents/ChatDetail';
+import SocketClient from './src/util/SocketClient';
+import io from 'socket.io-client';
+import {API_URL} from "@env";
+import Login from './src/components/StartScreens/Login';
 const Stack = createStackNavigator();
-
-
-
-
+const socket = io(API_URL+'/');
 const App = ()=>{
+  const [user, setuser] = useState(false);
+  const currentUser = useSelector((value)=> value.UserReducer.currentUser)
+
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
   ]);
-const dispath = useDispatch();
 
+  useEffect(() => {
+    if(currentUser !== null){
+      setuser(true);
+      // console.log(currentUser)
+    }
+
+    
+
+  }, [currentUser])
+  
 
   return(
     <NavigationContainer>
       <StatusBar 
       backgroundColor={'white'}
       barStyle={'dark-content'}/>
+      {user && <SocketClient socket={socket}/>}
       <Stack.Navigator
         initialRouteName='splash'
         screenOptions={{ headerShown:false }}
       >
+        <Stack.Screen name='login' component={Login}/>
         <Stack.Screen name='splash' component={Splash}/>
         <Stack.Screen name='home' component={TabBottomNavigation} />
-        <Stack.Screen name='login' component={Login}/>
         <Stack.Screen name='register' component={Register} />
         <Stack.Screen name='scanqr' component={ScanQrCode} options={{headerShown:true,title:"Quét bạn bè"}}/>
         <Stack.Screen name='profilescan' component={ProfileScan} />
+        <Stack.Screen name='chatdetail' component={ChatDetail}  initialParams={{socket:socket}}/>
       </Stack.Navigator>
     </NavigationContainer>
   )
