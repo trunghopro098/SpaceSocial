@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as FetchAPI from './fetchApi';
 import {updateDataFriend,updateUserOnline} from '../../redux/reducers/user.reducer';
 import { updateMessenges } from '../../redux/reducers/messenges.reducer';
+import { Audio } from './Audio'
 export default function SocketClient({socket}) {
     const {currentUser,followers,followings,currentIdRoom} = useSelector(e=>e.UserReducer);
     const {currentMessenges} = useSelector(e=>e.MessengesReducer);
@@ -46,14 +47,14 @@ export default function SocketClient({socket}) {
             const res = await FetchAPI.postDataAPI("/user/getInforById",{"idUser":data.sourceId})
             const dataUserSent = res.msg[0];
             if(currentIdRoom===null){
-                // if(data.sourceId!==currentUser.idUser){
-                //     audioNotifyRef.current.play();
-                // }
+                if(data.sourceId!==currentUser.idUser){
+                   Audio('ting.mp3');
+                }
             }else{
                 if(currentIdRoom===data.idRoom){
-                    // if(data.sourceId!==currentUser.idUser){
-                    //     audioNotifyRef.current.play();
-                    // }
+                    if(data.sourceId!==currentUser.idUser){
+                        Audio('ting.mp3');
+                    }
                     let arr = JSON.parse(JSON.stringify(currentMessenges));
                     arr.push(
                         {
@@ -66,10 +67,11 @@ export default function SocketClient({socket}) {
                             create_at: data.create_at
                         }
                     )
-                    console.log(arr);
+                    // console.log(arr);
                     dispatch(updateMessenges(arr));
                 }else{
                     if(data.sourceId!==currentUser.idUser){
+                        Audio('ting.mp3');
                         // audioNotifyRef.current.play();
                         // notification.open({
                         //     message: 'Tin nhắn mới',
@@ -86,7 +88,7 @@ export default function SocketClient({socket}) {
         return () => {
             socket.off("message");
         }
-    }, [socket,currentIdRoom,currentMessenges])
+    }, [socket,currentIdRoom,currentMessenges]);
     return (
         <View style={{display:'none'}}>
         

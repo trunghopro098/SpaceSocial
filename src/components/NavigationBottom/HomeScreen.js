@@ -15,14 +15,21 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
   const [showContent, setshowContent] = useState(false);
   const {dataPost, listLike} = useSelector((value)=>value.PostReducer)
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
+  const {currentMessenges} = useSelector(e=>e.MessengesReducer);
   const dispath = useDispatch();
   useEffect(() => {
     if(currentUser !== null){
       getDataPost();
-      getRomChat();
     }
     
   }, [])
+
+  useEffect(() => {
+    if(currentUser !== null){
+      getRomChat();
+    }
+    
+  }, [currentMessenges])
   const getDataPost = async()=>{
       const data = {idUser:currentUser.idUser};
       const res = await GETAPI.postDataAPI("/post/getPostById",data);
@@ -35,7 +42,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
   const getRomChat = async()=>{
     const data = {idUser: currentUser.idUser};
     const res = await GETAPI.postDataAPI("/messenges/getListCovensation", data);
-    // console.log(res)
+    console.log(res)
     dispath(updateListRoom(res.msg))
     // console.log('log xong')
 }

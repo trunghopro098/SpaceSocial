@@ -52,9 +52,14 @@ export default function ChatDetail({route, navigation}) {
     }
 
 
-    const sendMess = ()=>{
+    const sendMess = async()=>{
         if(text!==""){
             const encode_text = endCode(text);
+            const data = {"idUser":currentUser.idUser,"idRoom":idRoom,"message":encode_text,"typeMess":0};
+            const res = await FetchAPI.postDataAPI("/messenges/addMessenger",data);
+            if(res.msg==="Success"){
+                console.log("ok");
+            }
             socket.emit("chat", {"text":encode_text,"targetId":listRevicer,"idRoom":idRoom,"typeMess":0});
             settext("");
         }

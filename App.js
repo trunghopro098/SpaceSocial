@@ -14,6 +14,8 @@ import SocketClient from './src/util/SocketClient';
 import io from 'socket.io-client';
 import {API_URL} from "@env";
 import Login from './src/components/StartScreens/Login';
+import { Audio } from './src/util/Audio';
+
 const Stack = createStackNavigator();
 const socket = io(API_URL+'/');
 const App = ()=>{
@@ -23,10 +25,14 @@ const App = ()=>{
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
   ]);
+  LogBox.ignoreLogs([
+    "Non-serializable values were found in the navigation state.",
+  ]);
 
   useEffect(() => {
     if(currentUser !== null){
       setuser(true);
+      // Audio('ting.mp3');
       // console.log(currentUser)
     }
 

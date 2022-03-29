@@ -63,24 +63,24 @@ export default function LayoutImgPost({image}) {
                   <Image
                         source={{ uri: SetHTTP(image[0].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, marginTop: 2, borderRadius: 5 }}             
                     />
                       <Image
                         source={{ uri: SetHTTP(image[1].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, marginTop: 2, borderRadius: 5 }}             
                     />
             </View>
             <View style={styles.right4}>
                   <Image
                         source={{ uri: SetHTTP(image[2].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
                       <Image
                         source={{ uri: SetHTTP(image[3].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
             </View>
         </View>
@@ -92,25 +92,25 @@ export default function LayoutImgPost({image}) {
                   <Image
                         source={{ uri: SetHTTP(image[0].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
                       <Image
                         source={{ uri: SetHTTP(image[1].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
             </View>
             <View style={styles.right4}>
                   <Image
                         source={{ uri: SetHTTP(image[2].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
                     <View style={styles.imgmore}>
                       <Image
                         source={{ uri: SetHTTP(image[3].url)}}
                         resizeMode='cover'
-                        style={{ width: windowW * 0.45, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
                       <View style={styles.positionNumberImg}>
                         <Text style={{ color: 'white', fontSize: 24, fontWeight:'bold', backgroundColor: 'transparent'}}>+ {image.length-4}</Text>
@@ -199,18 +199,20 @@ const styles = StyleSheet.create({
   },
   left4:{
     width: windowW*0.48,
-    marginLeft: 5,
+    marginLeft: 15,
+    alignContent:'center',
+    alignItems:'center'
   },
   right4:{
 
     width: windowW*0.48,
   },
   imgmore:{
-    backgroundColor:'white'
+    // backgroundColor:'white'
   },
   positionNumberImg:{
     height: windowH*0.165,
-    width: windowW*0.45,
+    width: windowW*0.43,
     position: 'absolute',
     // opacity: .5,
     justifyContent: 'center',

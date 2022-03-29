@@ -68,7 +68,12 @@ export default function ChatScreen({navigation}) {
                       <Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold'  }}>{item.nameRoom}</Text>
                   }   
                       <View style={{ flexDirection:'row' }}>
-                          <Text style={{ color: 'gray', fontSize: 13, marginTop: 5 ,fontWeight: 'bold' }}>{item.lastNameSent}: </Text>
+                          {
+                            currentUser.idUser === item.sourceId ? 
+                              <Text style={{ color: 'gray', fontSize: 13, marginTop: 5 ,fontWeight: 'bold' }}>Bạn: </Text>:
+                              <Text style={{ color: 'gray', fontSize: 13, marginTop: 5 ,fontWeight: 'bold' }}>{item.lastNameSent}: </Text>
+                          }
+                
                           <Text style={{ color: 'gray', fontSize: 13, marginTop: 5  }}>{deCode(item.message).substring(0,18)+"..."}</Text>
                       </View>
 
