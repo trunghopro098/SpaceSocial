@@ -6,6 +6,9 @@ const messSlice = createSlice({
         datacall: null,
         listRoom: [],
         currentMessenges: [],
+        visibleCall:false,
+        idRoomCall:null,
+        statusCall: null,
     },
     reducers:{
         updateMessenges: (state, action)=>{
@@ -17,8 +20,18 @@ const messSlice = createSlice({
         updateCall: (state, action) => {
             state.datacall  =action.payload;
         },
+        updateVisibleCall: (state, action) => {
+            state.visibleCall  =action.payload;
+        },
+        updateIdRoomCall: (state, action) => {
+            state.idRoomCall  =action.payload;
+        },
+        updateStatusCall : (state,action)=>{
+            state.statusCall  =action.payload;
+        },
+
     }
 })
 
-export const {updateMessenges, updateListRoom, updateCall} = messSlice.actions;
+export const {updateMessenges, updateListRoom, updateCall, updateVisibleCall, updateIdRoomCall, updateStatusCall}   = messSlice.actions;
 export default messSlice.reducer;

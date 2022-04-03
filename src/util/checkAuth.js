@@ -28,7 +28,7 @@ export const CheckAuth  = async(dispath)=>{
             return false;
         }else{
             const followers = await GETAPI.postDataAPI("/user/getFollowers",{"idUser":res[0].idUser});
-            const followings = await GETAPI.postDataAPI("/user/getFollowings",{'iduser':res[0].iduser});
+            const followings = await GETAPI.postDataAPI("/user/getFollowings",{'idUser':res[0].idUser});
             // console.log('day la fls : ',followers);
             // console.log('day la flg : ',followings);
             dispath(updateUer(res[0]))

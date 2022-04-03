@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, StyleSheet, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
+import { View, Text, StatusBar, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, Alert } from 'react-native'
 import React,{useEffect, useRef, useState} from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { SetHTTP } from '../../util/SetHTTP';
@@ -9,7 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useDispatch, useSelector} from 'react-redux';
 import { updateIdRoom } from '../../../redux/reducers/user.reducer';
 import * as FetchAPI from '../../util/fetchApi';
-import { updateMessenges } from '../../../redux/reducers/messenges.reducer';
+import { updateIdRoomCall, updateMessenges, updateStatusCall, updateVisibleCall } from '../../../redux/reducers/messenges.reducer';
 import { windowW } from '../../util/Dimension';
 import { deCode,endCode } from '../../util/crypto';
 import moment from 'moment';
@@ -17,7 +17,8 @@ import CallTime from '../StartScreens/CallTime';
 
 export default function ChatDetail({route, navigation}) {
 
-    const currentUser = useSelector((value)=> value.UserReducer.currentUser);
+    const {currentUser,userOnline} = useSelector(e=>e.UserReducer);
+    console.log(userOnline);
     const {currentMessenges} = useSelector(e=>e.MessengesReducer);
     const idUser = currentUser.idUser;
     const {socket,item} = route.params;
@@ -31,15 +32,16 @@ export default function ChatDetail({route, navigation}) {
     let viewBot = useRef(null)
 
     useEffect(() => {
-        setshowMess(false);
+      setshowMess(false);
       dispatch(updateIdRoom(idRoom));
       getMessenges();
       getReciver();
     }, [item])
+
     const getMessenges = async()=>{
         const data = {"idRoom":item.idRoom}
         const res = await FetchAPI.postDataAPI("/messenges/getMessengesByIdRoom", data);
-        console.log(res)
+        // console.log(res)
         dispatch(updateMessenges(res.msg));
         setshowMess(true);
     } 
@@ -47,7 +49,7 @@ export default function ChatDetail({route, navigation}) {
     const getReciver = async()=>{
         const data = {"idRoom":idRoom,"idUser":currentUser.idUser};
         const res = await FetchAPI.postDataAPI("/messenges/getReciver",data);
-        console.log(res.msg);
+        // console.log(res.msg);
         setlistRevicer(res.msg);
     }
 
@@ -70,9 +72,33 @@ export default function ChatDetail({route, navigation}) {
         const str = StringFile.substring(lastIndex+1, StringFile.length);
         return str;
     }
+
+    const handleCallVideo = ()=>{
+        let i = 0;
+        listRevicer.map(e=>{
+            if(userOnline!==null){
+                if(userOnline.find(p=>p.targetId === e.idUser)){
+                    i++;
+                }
+            }
+        })
+        if(i>0){
+            dispatch(updateStatusCall("calling"));
+            dispatch(updateIdRoomCall(idRoom));
+            dispatch(updateVisibleCall(true));
+            // console.log("dang goi")
+            navigation.navigate("videocall",{item: item})
+        }else{
+            Alert.alert("Space Social", "Hiện tại không hoạt động vui lòng gọi lại sau!!"),
+            [{
+                text:'cancel',
+                style:"cancel"
+            }]
+        } 
+    }
+
     const renderItem = ({item, index})=>{
-        // let itemEnd = messenges.length-1;
-        
+        // let itemEnd = messenges.length-1;        
         return(
             <View style={styles.itemMess}>
                 {/* <View style={idUser === item.sourceId ?styles.you:styles.me} >
@@ -244,7 +270,10 @@ export default function ChatDetail({route, navigation}) {
                 <TouchableOpacity>
                         <Ionicons name='call' size={21} color='blue' style={{ marginRight: 13 }}/>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={()=>{
+                        handleCallVideo();
+                    }}>
                         <FontAwesome name='video-camera' size={21} color='blue' style={{ marginRight: 13 }}/>
                 </TouchableOpacity>
                 <TouchableOpacity>

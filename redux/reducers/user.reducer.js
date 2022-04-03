@@ -31,5 +31,5 @@ const userSlice = createSlice({
     }
 })
 
-export const { updateUer, updateFollowers, updateFollowing, updateIdRoom, updateUserOnline,  } = userSlice.actions;
+export const { updateUer, updateFollowers, updateFollowing, updateIdRoom, updateUserOnline, updateDataFriend  } = userSlice.actions;
 export default userSlice.reducer;

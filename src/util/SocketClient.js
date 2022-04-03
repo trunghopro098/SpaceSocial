@@ -3,11 +3,11 @@ import React ,{useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import * as FetchAPI from './fetchApi';
 import {updateDataFriend,updateUserOnline} from '../../redux/reducers/user.reducer';
-import { updateMessenges } from '../../redux/reducers/messenges.reducer';
+import { updateCall, updateMessenges } from '../../redux/reducers/messenges.reducer';
 import { Audio } from './Audio'
 export default function SocketClient({socket}) {
     const {currentUser,followers,followings,currentIdRoom} = useSelector(e=>e.UserReducer);
-    const {currentMessenges} = useSelector(e=>e.MessengesReducer);
+    const {currentMessenges, datacall} = useSelector(e=>e.MessengesReducer);
 
     const dispatch = useDispatch();
     //JoinUser
@@ -20,18 +20,23 @@ export default function SocketClient({socket}) {
             socket.off('joinUser');
         }
     }, [socket, currentUser])
+
+
+
     //GetUserOnl
     useEffect(() => {
         const data = {"followings":followings};
+        // console.log("nef ner")
+        // console.log("datane",data)
         socket.on("changeJoin",async(_)=>{
             socket.emit("checkUserOnline",data);
             //Update friend to see lastLogin
             const res = await FetchAPI.postDataAPI("/user/getFriendById",{"idUser":currentUser.idUser});
-            // dispatch(updateDataFriend(res.msg));
+            dispatch(updateDataFriend(res.msg));
+            // console.log(res)
             //Update array user online
         })
         socket.on("getUserOnline",data=>{
-            console.log("run")
             dispatch(updateUserOnline(data));
         })
         return ()=>{
@@ -39,6 +44,7 @@ export default function SocketClient({socket}) {
             socket.off('getUserOnline');
         }
     },[socket,currentUser])
+
 
     // Message
     useEffect(() => {
@@ -72,7 +78,7 @@ export default function SocketClient({socket}) {
                 }else{
                     if(data.sourceId!==currentUser.idUser){
                         Audio('ting.mp3');
-                        // audioNotifyRef.current.play();
+                        
                         // notification.open({
                         //     message: 'Tin nhắn mới',
                         //     description:
@@ -89,6 +95,22 @@ export default function SocketClient({socket}) {
             socket.off("message");
         }
     }, [socket,currentIdRoom,currentMessenges]);
+
+
+    //Call video
+    useEffect(() => {
+        socket.on("callUser", (data) => {
+            dispatch(updateCall(data));
+            dispatch(updateStatusCall("called"));
+            dispatch(updateIdRoomCall(data.idRoom));
+            dispatch(updateVisibleCall(true));
+		})
+        return () => {
+            socket.off("callUser");
+        }
+    },[socket,datacall])
+
+
     return (
         <View style={{display:'none'}}>
         

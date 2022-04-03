@@ -15,7 +15,8 @@ import io from 'socket.io-client';
 import {API_URL} from "@env";
 import Login from './src/components/StartScreens/Login';
 import { Audio } from './src/util/Audio';
-
+import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
+ 
 const Stack = createStackNavigator();
 const socket = io(API_URL+'/');
 const App = ()=>{
@@ -51,6 +52,7 @@ const App = ()=>{
         initialRouteName='splash'
         screenOptions={{ headerShown:false }}
       >
+        <Stack.Screen name='videocall' component={GettingVideo} initialParams={{socket:socket}}/>
         <Stack.Screen name='login' component={Login}/>
         <Stack.Screen name='splash' component={Splash}/>
         <Stack.Screen name='home' component={TabBottomNavigation} />
