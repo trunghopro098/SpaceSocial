@@ -9,16 +9,18 @@ import {
     MediaStreamTrack,
     mediaDevices,
     registerGlobals
-  } from 'react-native-webrtc';
+} from 'react-native-webrtc';
 import Peer from "simple-peer";
 import { windowH, windowW } from "../../util/Dimension";
 import { SetHTTP } from '../../util/SetHTTP';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 import { updateIdRoomCall, updateMessenges, updateStatusCall, updateVisibleCall } from '../../../redux/reducers/messenges.reducer';
-import * as FetchAPI from '../../util/fetchApi'
+import * as FetchAPI from '../../util/fetchApi';
+
 // const Peer = require('simple-peer');
 function GettingVideo({route, navigation}){
+    const {currentUser} = useSelector(e=>e.UserReducer);
     const {socket,item} = route.params;
     const connectionRef = useRef();
     const [Camera, setCamera] = useState(false);
@@ -30,9 +32,11 @@ function GettingVideo({route, navigation}){
     const [ caller, setCaller ] = useState("");
     const [ name, setName ] = useState("");
     const [ callerSignal, setCallerSignal ] = useState();
+   
 
     const dispatch = useDispatch();
     const {datacall,idRoomCall,statusCall,visibleCall} = useSelector(e=>e.MessengesReducer);
+   
     // console.log(item);
     let isFront = true;
     // useEffect(() => {
@@ -74,6 +78,9 @@ function GettingVideo({route, navigation}){
 
 
     const callUser = async() => {
+      const data = {"idRoom":idRoomCall,"idUser":currentUser.idUser};
+      const res = await FetchAPI.postDataAPI("/messenges/getReciver",data);
+      const idTocall = res.msg;
         mediaDevices.enumerateDevices().then(sourceInfos => {
           // console.log(sourceInfos)
           let videoSourceId;
@@ -92,55 +99,68 @@ function GettingVideo({route, navigation}){
             }
           })
           .then(stream => {
-
-              setmyStream(stream);
-
-              const peer = new Peer({
-                initiator: true,
-                trickle: false,
-                stream: stream,
-                wrtc: { 
-                  RTCPeerConnection,
-                  RTCIceCandidate,
-                  RTCSessionDescription,
-                  RTCView,
-                  MediaStream,
-                  MediaStreamTrack,
-                  mediaDevices,
-                  registerGlobals
-                },
-            })
-                // peer._debug = console.log;
-                // peer.on("signal", (data) => {
-                //     socket.emit("callUser", {
-                //         userToCall: idTocall,
-                //         signalData: data,
-                //         from: currentUser.idUser,
-                //         idRoom: idRoomCall,
-                //         name: currentUser.firstName+" "+currentUser.lastName
-                //     })
-                // })
-                // peer.on("stream", (stream) => {
-                //     if(videoUserRef.current){
-                //         videoUserRef.current.srcObject = stream
-                //     }
-                // })
-                // peer.on('close',() => {
-                //     handleInit();
-                // });
-                // socket.on("callAccepted", (signal) => {
-                //     setCallAccepted(true)
-                //     myVideoRef.current.srcObject = stream;
-                //     peer.signal(signal);
-                //     setstatusCalling(false);
-                // })
-                // socket.on("rejectCall", (data)=>{
-                //     if(data==="reject"){
-                //         // audioPhoneHangUpRef.current.play();
-                //         setrejectCall(true);
-                //         setstatusCalling(false);
-                //     }
-                // })
+                setmyStream(stream);
+            
+                const peer = new Peer({
+                  initiator: true,
+                  trickle: false,
+                  stream: stream,
+                  config: {
+                    iceServers: [
+                      {
+                        urls: "turn:numb.viagenie.ca",
+                        credential: "muazkh",
+                        username: "webrtc@live.com",
+                      },
+                      // { urls: 'stun:stun.l.google.com:19302' }, 
+                      // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
+                    ],
+                  },
+                  wrtc: {
+                    RTCPeerConnection,
+                    RTCIceCandidate,
+                    RTCSessionDescription,
+                    RTCView,
+                    MediaStream,
+                    MediaStreamTrack,
+                    mediaDevices,
+                    registerGlobals
+                  },
+                })
+            
+                peer._debug = console.log;
+                peer.on("signal", (data) => {
+                    socket.emit("callUser", {
+                        userToCall: idTocall,
+                        signalData: data,
+                        from: currentUser.idUser,
+                        idRoom: idRoomCall,
+                        name: currentUser.firstName+" "+currentUser.lastName
+                    })
+                })
+                peer.on("stream", (stream) => {
+                    console.log("hello")
+                    if(videoUserRef.current){
+                        videoUserRef.current.srcObject = stream
+                    }
+                })
+                peer.on('close',() => {
+                    handleInit();
+                });
+                socket.on("callAccepted", (signal) => {
+                    console.log("zoâ")
+                    // setCallAccepted(true)
+                    // myVideoRef.current.srcObject = stream;
+                    peer.signal(signal);
+                    // setstatusCalling(false);
+                })
+                socket.on("rejectCall", (data)=>{
+                    if(data==="reject"){
+                        // audioPhoneHangUpRef.current.play();
+                        // setrejectCall(true);
+                        // setstatusCalling(false);
+                    }
+                })
                 connectionRef.current = peer
 
           

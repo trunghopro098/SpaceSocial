@@ -74,6 +74,12 @@ export default function ChatDetail({route, navigation}) {
     }
 
     const handleCallVideo = ()=>{
+        // dispatch(updateStatusCall("calling"));
+        // dispatch(updateIdRoomCall(idRoom));
+        // dispatch(updateVisibleCall(true));
+        // // console.log("dang goi")
+        // navigation.navigate("videocall",{item: item})
+
         let i = 0;
         listRevicer.map(e=>{
             if(userOnline!==null){
