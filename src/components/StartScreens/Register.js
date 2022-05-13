@@ -5,7 +5,6 @@ import { Formik } from 'formik';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { windowH, windowW } from '../../util/Dimension';
 import * as GETAPI from '../../util/fetchApi';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Feather from 'react-native-vector-icons/Feather';
  const validationSchema = yup.object().shape({
      username: yup
@@ -26,11 +25,11 @@ import Feather from 'react-native-vector-icons/Feather';
     firstName: yup
         .string()
         .min(2,({min})=> `Tên ít nhất ${min} ký  tự`)
-        .required('Nhập tên!'),
+        .required('Nhập họ!'),
      lastName: yup
         .string()
         .min(3,({min})=> `Họ đệm ít nhất ${min} ký  tự`)
-        .required('Nhập họ đệm!'),
+        .required('Nhập tên!'),
     email: yup
         .string()
         .email('nhập đúng định dạng email!')
@@ -87,7 +86,7 @@ export default function Register({navigation}) {
             resizeMode="cover"
             />
         <LinearTextGradient
-            style={{fontSize:20, fontWeight: 'bold'}}
+            style={{fontSize:20, fontWeight: 'bold',marginBottom:20}}
             locations={[0,1]}
             colors={['red','blue']}
             start={{ x:0, y:0 }}
@@ -113,12 +112,11 @@ export default function Register({navigation}) {
                 touched
              }) => (
                 <View style={styles.form}>
-                    <Text style={{ fontWeight:'bold', fontSize:23, color:'blue' }}>ĐĂNG KÝ</Text>
                     <ScrollView style={{ paddingHorizontal: 5 }}>
                         <TextInput
                             onChangeText={handleChange('username')}
                             onBlur={handleBlur('username')}
-                            placeholder={'UserName'}
+                            placeholder={'Tên đăng nhập'}
                             value={values.username}
                             style={(errors.username && touched.username) ? {...styles.Textinput, borderColor: 'red'}:styles.Textinput }
                         />
@@ -127,7 +125,7 @@ export default function Register({navigation}) {
                         }
                         <TextInput
                             onChangeText={handleChange('firstName')}
-                            placeholder={'First Name'}
+                            placeholder={'Họ'}
                             onBlur={handleBlur('firstName')}
                             value={values.firstName}
                             style={(errors.firstName && touched.firstName) ? {...styles.Textinput, borderColor: 'red'}:styles.Textinput }
@@ -137,7 +135,7 @@ export default function Register({navigation}) {
                         }
                         <TextInput
                             onChangeText={handleChange('lastName')}
-                            placeholder={'Last Name'}
+                            placeholder={'Tên'}
                             onBlur={handleBlur('lastName')}
                             value={values.lastName}
                             style={(errors.lastName && touched.lastName) ? {...styles.Textinput, borderColor: 'red'}:styles.Textinput }
@@ -163,7 +161,7 @@ export default function Register({navigation}) {
                             <TextInput
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
-                                placeholder={'Password'}
+                                placeholder={'Mật khấu'}
                                 value={values.password}
                                 style={styles.inputpassword} 
                                 secureTextEntry={showPass}
@@ -191,7 +189,7 @@ export default function Register({navigation}) {
                             <TextInput
                                 onChangeText={handleChange('confirmPassword')}
                                 onBlur={handleBlur('confirmPassword')}
-                                placeholder={'Confirm Password'}
+                                placeholder={'Nhập lại mật khẩu'}
                                 value={values.confirmPassword}
                                 style={styles.inputpassword}
                                 secureTextEntry={showPassConfirm}
@@ -223,7 +221,7 @@ export default function Register({navigation}) {
                                     }}
                             onPress={handleSubmit}
                             >
-                            <Text style={{ fontWeight:'bold', fontSize: 14, color:'white' }}>Sign up</Text>
+                            <Text style={{ fontWeight:'bold', fontSize: 14, color:'white' }}>Đăng ký</Text>
                         </TouchableOpacity>                       
                     </ScrollView>
                 </View>
@@ -264,9 +262,9 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 10,
         marginTop: 10,
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: 'blue',
-        paddingLeft: 5
+        paddingHorizontal:10
     },
     inputpassword:{
         width: '85%',

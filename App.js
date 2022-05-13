@@ -56,7 +56,7 @@ const App = ()=>{
         <Stack.Screen name='login' component={Login}/>
         <Stack.Screen name='splash' component={Splash}/>
         <Stack.Screen name='home' component={TabBottomNavigation} />
-        <Stack.Screen name='register' component={Register} />
+        <Stack.Screen name='register' component={Register} options={{headerShown:true,title:"Đăng ký"}}/>
         <Stack.Screen name='scanqr' component={ScanQrCode} options={{headerShown:true,title:"Quét bạn bè"}}/>
         <Stack.Screen name='profilescan' component={ProfileScan} />
         <Stack.Screen name='chatdetail' component={ChatDetail}  initialParams={{socket:socket}}/>

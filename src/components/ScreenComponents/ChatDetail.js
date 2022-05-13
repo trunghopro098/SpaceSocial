@@ -16,7 +16,6 @@ import moment from 'moment';
 import CallTime from '../StartScreens/CallTime';
 
 export default function ChatDetail({route, navigation}) {
-
     const {currentUser,userOnline} = useSelector(e=>e.UserReducer);
     console.log(userOnline);
     const {currentMessenges} = useSelector(e=>e.MessengesReducer);
@@ -112,127 +111,124 @@ export default function ChatDetail({route, navigation}) {
                     <Text>xin chao</Text>
                 </View> */}
 
-                    {
-                        idUser === item.sourceId ? 
-                        <View style={styles.me}>
-                            <View style={{ marginRight: 5 }}>
-                                    <Text style={styles.formatday}>{moment(item.create_at).format('dddd')} {moment(item.create_at).format('L')}</Text>
-                                    <Text style={styles.formatday}>{moment(item.create_at).format('LT')}</Text>
-                                </View>
-                            {
-                                item.typeMess === 0 && <Text style={{...styles.text, backgroundColor: 'blue'}}>{deCode(item.message)}</Text>
-                            }
-                            {
-                                item.typeMess === 1 && 
-                                    <Image
-                                        source={{ uri:SetHTTP(deCode(item.message))}}
-                                        resizeMode='cover'
-                                        style={{ 
-                                            width: windowW*0.6,
-                                            height: windowW*0.6,
-                                            borderRadius: 5
-
-                                            }}
-                                    />
-                            }
-                            {
-                                item.typeMess === 2 && 
-                                <TouchableOpacity>
-                                    <Text style={{...styles.text, backgroundColor:'green'}}>{handleFile(item.message)}</Text>
-                                </TouchableOpacity> 
-                            }
-                            {
-                            item.typeMess === 3 && 
+                {idUser === item.sourceId ? 
+                    <View style={styles.me}>
+                        <View style={{ marginRight: 5 }}>
+                                <Text style={styles.formatday}>{moment(item.create_at).format('dddd')} {moment(item.create_at).format('L')}</Text>
+                                <Text style={styles.formatday}>{moment(item.create_at).format('LT')}</Text>
+                            </View>
+                        {
+                            item.typeMess === 0 && <Text style={{...styles.text, backgroundColor: 'blue'}}>{deCode(item.message)}</Text>
+                        }
+                        {
+                            item.typeMess === 1 && 
+                                <Image
+                                    source={{ uri:SetHTTP(deCode(item.message))}}
+                                    resizeMode='cover'
+                                    style={{ 
+                                        width: windowW*0.6,
+                                        height: windowW*0.6,
+                                        borderRadius: 5
+                                    }}
+                                />
+                        }
+                        {
+                            item.typeMess === 2 && 
+                            <TouchableOpacity>
+                                <Text style={{...styles.text, backgroundColor:'green'}}>{handleFile(item.message)}</Text>
+                            </TouchableOpacity> 
+                        }
+                        {
+                        item.typeMess === 3 && 
+                        <View style={styles.boxCall}>
+                            <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>Cuộc gọi đi.</Text>
+                            <CallTime times={deCode(item.message)}/>
+                            <TouchableOpacity style={ styles.CallBack }>
+                                <Text style={{ color: 'red',}}>Gọi Lại</Text>
+                            </TouchableOpacity>
+                        </View>
+                        }                                   
+                        {
+                            item.typeMess === 4 && 
                             <View style={styles.boxCall}>
-                                <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>Cuộc gọi đi.</Text>
-                                <CallTime times={deCode(item.message)}/>
-                                <TouchableOpacity style={ styles.CallBack }>
-                                    <Text style={{ color: 'red',}}>Gọi Lại</Text>
-                                </TouchableOpacity>
-                            </View>
-                            }                                   
-                            {
-                                item.typeMess === 4 && 
-                                <View style={styles.boxCall}>
-                                <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>Bạn đã lỡ cuộc gọi của {item.lastName}.</Text>
-                                <CallTime times={deCode(item.message)}/>
-                                <TouchableOpacity style={ styles.CallBack }>
-                                    <Text style={{ color: 'red',}}>Gọi Lại</Text>
-                                </TouchableOpacity>
-                            </View>
-                            }                           
-                            
-                            
-                        </View>:
-                        <View style={styles.you}>
-                            <View style={styles.avatarAndText}>
-                                {index === currentMessenges.length-1 || currentMessenges[index===currentMessenges.length-1 ? 0:index+1].sourceId!==item.sourceId  ?
-                                 <> 
-                                    {item.avatar === null ?
-                                        <Image 
-                                        source={require('../../../assets/img/avatar.jpg')}
-                                        style={{ width: 20, height: 20,  marginRight: 5, borderRadius:50 }}
+                            <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>Bạn đã lỡ cuộc gọi của {item.lastName}.</Text>
+                            <CallTime times={deCode(item.message)}/>
+                            <TouchableOpacity style={ styles.CallBack }>
+                                <Text style={{ color: 'red',}}>Gọi Lại</Text>
+                            </TouchableOpacity>
+                        </View>
+                        }                           
+                        
+                        
+                    </View>:
+                    <View style={styles.you}>
+                        <View style={styles.avatarAndText}>
+                            {index === currentMessenges.length-1 || currentMessenges[index===currentMessenges.length-1 ? 0:index+1].sourceId!==item.sourceId  ?
+                                <> 
+                                {item.avatar === null ?
+                                    <Image 
+                                    source={require('../../../assets/img/avatar.jpg')}
+                                    style={{ width: 20, height: 20,  marginRight: 5, borderRadius:50 }}
+                                    resizeMode='cover'
+                                    />:                               
+                                    <Image
+                                        source={{ uri:SetHTTP(item.avatar)}}
                                         resizeMode='cover'
-                                        />:                               
+                                        style={{ width: 20, height: 20,  marginRight: 5, borderRadius: 50 }}
+                                    />                                  
+                                }
+                            </>:<View style={{ marginLeft: 25 }}></View>
+                                }
+                                {
+                                    item.typeMess === 0 && <Text style={{...styles.text, backgroundColor:'green'}}>{deCode(item.message)}</Text>
+                                }
+                                {
+                                    item.typeMess === 1 && 
                                         <Image
-                                            source={{ uri:SetHTTP(item.avatar)}}
+                                            source={{ uri:SetHTTP(deCode(item.message))}}
                                             resizeMode='cover'
-                                            style={{ width: 20, height: 20,  marginRight: 5, borderRadius: 50 }}
-                                        />                                  
-                                    }
-                                </>:<View style={{ marginLeft: 25 }}></View>
-                                    }
+                                            style={{ 
+                                                width: windowW*0.6,
+                                                height: windowW*0.6,
+                                                borderRadius: 5
+                                            }}
+                                        />
+                                }
+                                {
+                                    item.typeMess === 2 && 
+                                    <TouchableOpacity>
+                                        <Text style={{...styles.text, backgroundColor:'green'}}>{handleFile(item.message)}</Text>
+                                    </TouchableOpacity> 
+                                }
                                     {
-                                        item.typeMess === 0 && <Text style={{...styles.text, backgroundColor:'green'}}>{deCode(item.message)}</Text>
-                                    }
-                                    {
-                                        item.typeMess === 1 && 
-                                            <Image
-                                                source={{ uri:SetHTTP(deCode(item.message))}}
-                                                resizeMode='cover'
-                                                style={{ 
-                                                    width: windowW*0.6,
-                                                    height: windowW*0.6,
-                                                    borderRadius: 5
-
-                                                 }}
-                                            />
-                                    }
-                                    {
-                                        item.typeMess === 2 && 
-                                        <TouchableOpacity>
-                                            <Text style={{...styles.text, backgroundColor:'green'}}>{handleFile(item.message)}</Text>
-                                        </TouchableOpacity> 
-                                    }
-                                     {
-                                        item.typeMess === 3 && 
-                                        <View style={styles.boxCall}>
-                                            <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>{item.lastName} đã gọi cho bạn.</Text>
-                                            <CallTime times={deCode(item.message)}/>
-                                            <TouchableOpacity style={ styles.CallBack }>
-                                                <Text style={{ color: 'red',}}>Gọi Lại</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    }                                   
-                                    {
-                                        item.typeMess === 4 && 
-                                        <View style={styles.boxCall}>
-                                        <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>Bạn đã lỡ cuộc gọi của {item.lastName}.</Text>
+                                    item.typeMess === 3 && 
+                                    <View style={styles.boxCall}>
+                                        <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>{item.lastName} đã gọi cho bạn.</Text>
                                         <CallTime times={deCode(item.message)}/>
                                         <TouchableOpacity style={ styles.CallBack }>
                                             <Text style={{ color: 'red',}}>Gọi Lại</Text>
                                         </TouchableOpacity>
                                     </View>
-                                    }                                
-                                <View style={{ marginLeft: 5 }}>
-                                    <Text style={styles.formatday}>{moment(item.create_at).format('dddd')} {moment(item.create_at).format('L')}</Text>
-                                    <Text style={styles.formatday}>{moment(item.create_at).format('LT')}</Text>
+                                }                                   
+                                {
+                                    item.typeMess === 4 && 
+                                    <View style={styles.boxCall}>
+                                    <Text style={{ color: 'white', marginTop: 15, fontSize: 15}}>Bạn đã lỡ cuộc gọi của {item.lastName}.</Text>
+                                    <CallTime times={deCode(item.message)}/>
+                                    <TouchableOpacity style={ styles.CallBack }>
+                                        <Text style={{ color: 'red',}}>Gọi Lại</Text>
+                                    </TouchableOpacity>
                                 </View>
-                                
-                            </View>       
-                        </View>
-                    }
-                </View>
+                                }                                
+                            <View style={{ marginLeft: 5 }}>
+                                <Text style={styles.formatday}>{moment(item.create_at).format('dddd')} {moment(item.create_at).format('L')}</Text>
+                                <Text style={styles.formatday}>{moment(item.create_at).format('LT')}</Text>
+                            </View>
+                            
+                        </View>       
+                    </View>
+                }
+            </View>
         )
     }
 
@@ -251,9 +247,11 @@ export default function ChatDetail({route, navigation}) {
                 }>
                     <AntDesign name='arrowleft' size={25} color='blue' style={{ marginRight: 10 }}/>
                 </TouchableOpacity>
+                    {item.type===1 ? 
+                    <>
                     {item.avatar === null ?
                         <TouchableOpacity>
-<                              Image
+                            <Image
                                 source={require("../../../assets/img/avatar.jpg")}
                                 style={{ width: 40, height: 40, borderRadius:50 }}
                                 resizeMode='cover'
@@ -266,6 +264,31 @@ export default function ChatDetail({route, navigation}) {
                                     style={{ width: 40, height: 40, borderRadius: 50 }}
                                 />
                         </TouchableOpacity>
+                    }
+                    {userOnline !== null &&
+                        <>
+                            {userOnline.find(p=>p.targetId===item.idUserToChat) &&
+                                <View style={styles.online}/>
+                            }
+                        </>
+                    }
+                    </>
+                    :
+                    <>
+                    {item.avatarRoom === null ?
+                    <Image 
+                       source={require('../../../assets/img/avatar_chat_room.png')}
+                       style={{ width: 40, height: 40, borderRadius:50 }}
+                       resizeMode='cover'
+                     />
+                     :
+                     <Image
+                         source={{ uri:SetHTTP(item.avatarRoom)}}
+                         resizeMode='cover'
+                         style={{ width: 40, height: 40, borderRadius: 50 }}
+                     />
+                    }
+                    </>
                     }
                 {item.nameRoom === null ? 
                     <Text style={{ color: 'black', fontSize: 15, fontWeight: 'bold', marginLeft: 10  }}>{item.firstName} {item.lastName}</Text>:
@@ -304,59 +327,39 @@ export default function ChatDetail({route, navigation}) {
             }
         </View>
         <View style={styles.bottomContentMess}>
-            {showTool ? 
+            {showTool ?
             <>
                 <TouchableOpacity>
-                    <AntDesign name='appstore-o' size={21} color='blue'/>
+                    <AntDesign name='appstore-o' size={21} color='#0083E1'/>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginLeft:5 }}>
-                    <FontAwesome name='file-picture-o' size={19} color='blue'/>
+                    <FontAwesome name='file-picture-o' size={19} color='#0083E1'/>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginLeft:5, marginRight:3}}>
-                    <Entypo name='image' size={23} color='blue'/>
+                    <Entypo name='image' size={23} color='#0083E1'/>
                 </TouchableOpacity>
-                <TextInput
-                        placeholder='Aa'
-                        style={{ 
-                            marginHorizontal: 3,
-                            width: windowW*0.60,
-                            height:"90%",
-                            backgroundColor:'#C1C1C1',
-                            borderRadius: 50,
-                            paddingHorizontal: 15,
-                            textAlignVertical:'center'
-                        }}
-                        onPressOut={()=>setshowTool(false)}
-                />
-                <TouchableOpacity style={{ marginLeft:3 }}>
-                    <Ionicons name='send' size={29} color='blue' />
-                </TouchableOpacity>
-                
-            </>:
-            <>
+            </>
+            :
                 <TouchableOpacity onPress={()=>{setshowTool(true)}}>
                     <MaterialCommunityIcons name='arrow-right-thin-circle-outline' size={28} color='blue'/>
                 </TouchableOpacity>
-                <TextInput
+            }
+            <TextInput
                     placeholder='Aa'
                     style={{ 
-                        marginHorizontal: 5,
-                        width: windowW*0.75,
+                        marginHorizontal: 3,
+                        width: showTool ? windowW*0.66:windowW*0.77,
                         height:"90%",
-                        backgroundColor:'#C1C1C1',
+                        backgroundColor:'#E9E9E9',
                         borderRadius: 50,
-                        paddingHorizontal: 15
+                        paddingHorizontal: 15,
+                        textAlignVertical:'center'
                     }}
-                    value={text}
-                    onChangeText={e=>settext(e)}
-                />
-                 <TouchableOpacity style={{ marginLeft:5 }} onPress={sendMess}>
-                    <Ionicons name='send' size={29} color='blue' />
-                </TouchableOpacity>
-            </>}
-  
-
-            
+                    onPressOut={()=>setshowTool(false)}
+            />
+            <TouchableOpacity style={{ marginLeft:"auto",marginRight:5 }}>
+                <Ionicons name='send' size={29} color='#0083E1' />
+            </TouchableOpacity>
         </View>
     </View>
   )
@@ -466,6 +469,14 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignContent:'center',
         alignItems:'center'
+    },
+    online:{
+        width:10,
+        height:10,
+        borderRadius:20,
+        backgroundColor:'green',
+        position:'absolute',
+        bottom:0,
+        left:68
     }
-
 })

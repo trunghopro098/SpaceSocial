@@ -14,7 +14,7 @@ import { LinearTextGradient } from 'react-native-text-gradient';
 
 
 export default function ChatScreen({navigation}) {
-  const {currentUser} = useSelector((value)=>value.UserReducer);
+  const {currentUser,userOnline} = useSelector((value)=>value.UserReducer);
   const {listRoom} = useSelector((value)=>value.MessengesReducer);
   const [ListRoomToShow, setListRoomToShow] = useState([])
   const [CurrentTime, setCurrentTime] = useState(0);
@@ -39,27 +39,55 @@ export default function ChatScreen({navigation}) {
 
   const renderItem = ({item})=>{
     return(
+      <View style={styles.wrapperItemchat}>
         <TouchableOpacity
             onPress={()=>{
               navigation.navigate('chatdetail',{item: item})
             }}
-           style={styles.chatItem}>
+            style={styles.chatItem}
+          >
             <View style={styles.avatarChatItem}>
+              {item.type===1 ? 
+                <>
                 {item.avatar === null ?
-                      
-                    <Image 
+                  <Image 
                     source={require('../../../assets/img/avatar.jpg')}
                     style={{ width: 50, height: 50, borderRadius:50 }}
                     resizeMode='cover'
-                    />:
-              
-                      <Image
-                          source={{ uri:SetHTTP(item.avatar)}}
-                          resizeMode='cover'
-                          style={{ width: 50, height: 50, borderRadius: 50 }}
-                        />
-                     
-                  }
+                  />
+                  :
+                  <Image
+                      source={{ uri:SetHTTP(item.avatar)}}
+                      resizeMode='cover'
+                      style={{ width: 50, height: 50, borderRadius: 50 }}
+                  />
+                }
+                {userOnline !== null &&
+                    <>
+                        {userOnline.find(p=>p.targetId===item.idUserToChat) &&
+                          <View style={styles.online}/>
+                        }
+                    </>
+                }
+                </>
+                :
+                <>
+                 {item.avatarRoom === null ?
+                 <Image 
+                    source={require('../../../assets/img/avatar_chat_room.png')}
+                    style={{ width: 50, height: 50, borderRadius:50 }}
+                    resizeMode='cover'
+                  />
+                  :
+                  <Image
+                      source={{ uri:SetHTTP(item.avatarRoom)}}
+                      resizeMode='cover'
+                      style={{ width: 50, height: 50, borderRadius: 50 }}
+                  />
+                 }
+                </>
+                
+              }
             </View>
             <View style={styles.rightChatItem}>
                   <View style={styles.InforRoomChat}>
@@ -84,6 +112,7 @@ export default function ChatScreen({navigation}) {
                   </View>
             </View>
         </TouchableOpacity>
+      </View>
     )
   }
 
@@ -91,7 +120,8 @@ export default function ChatScreen({navigation}) {
     <View style={styles.container}>
           <StatusBar 
             backgroundColor={'white'}
-            barStyle={'dark-content'}/>
+            barStyle={'dark-content'}
+          />
           <View style={styles.headerChat}>
                 <View style={styles.leftHeader}>
                     {currentUser.avatar === null ?
@@ -143,6 +173,7 @@ export default function ChatScreen({navigation}) {
                   keyExtractor={(item)=>item.id}
                   showsVerticalScrollIndicator={false}
                   renderItem={renderItem}
+                  style={{flex:1}}
               />
           </VirtualizedViewFlaslist>
     </View>
@@ -183,23 +214,35 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   Chat:{
+    flex:1,
     marginTop: 5,
     flexDirection:'column',
     alignItems:'center',
     alignContent:'center'
   },
+  wrapperItemchat:{
+    paddingBottom:5
+  },
   chatItem:{
-    width: windowW,
+    position:'relative',
+    flex:1,
     height: 65,
     backgroundColor: 'white',
-    marginTop: 5,
     paddingHorizontal: 10,
-    borderBottomWidth: 0.2,
-    borderColor: 'black',
+    marginHorizontal:10,
     flexDirection: 'row',
     alignContent:'center',
     alignItems:'center',
-    justifyContent:'flex-start'
+    justifyContent:'flex-start',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 2,
+    borderRadius:10
   },
   avatarChatItem:{
     width: 60,
@@ -210,15 +253,13 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   rightChatItem:{
-    width: windowW-70,
+    flex:1,
     height: '100%',
     backgroundColor:'white',
     marginLeft: 3,
     flexDirection: 'row',
     justifyContent:'space-between',
     paddingTop: 10,
-    paddingRight: 10
-
   },
   InforRoomChat:{
     flexDirection: 'column',
@@ -236,7 +277,7 @@ const styles = StyleSheet.create({
     justifyContent:'flex-start',
     alignContent:'center',
     alignItems:'center',
-    backgroundColor:'#DBDEE5'
+    backgroundColor:'#E9E9E9'
   },
   Itemsearch:{
     width:'100%',
@@ -244,7 +285,14 @@ const styles = StyleSheet.create({
     justifyContent:'flex-start',
     alignContent:'center',
     alignItems:'center',
-  
-    
+  },
+  online:{
+    width:10,
+    height:10,
+    borderRadius:20,
+    backgroundColor:'green',
+    position:'absolute',
+    bottom:10,
+    left:42
   }
 })

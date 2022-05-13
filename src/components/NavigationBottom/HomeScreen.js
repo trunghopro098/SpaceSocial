@@ -10,19 +10,20 @@ import News from '../ScreenComponents/News';
 import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
 import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Facebook } from 'react-content-loader/native';
 // import TruncateText from '../../util/TruncateText';
  function HomeScreen({navigation}) {
   const [showContent, setshowContent] = useState(false);
-  const {dataPost, listLike} = useSelector((value)=>value.PostReducer)
-  const currentUser = useSelector((value)=> value.UserReducer.currentUser)
+  const {dataPost, listLike} = useSelector(value=>value.PostReducer)
+  const currentUser = useSelector(value=> value.UserReducer.currentUser)
   const {currentMessenges} = useSelector(e=>e.MessengesReducer);
   const dispath = useDispatch();
+  
   useEffect(() => {
     if(currentUser !== null){
       getDataPost();
     }
-    
-  }, [])
+  }, [currentUser])
 
   useEffect(() => {
     if(currentUser !== null){
@@ -36,7 +37,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
       dispath(updatePostData(res.msg))
       // console.log(res.msg[4].arr_img);
       setshowContent(true);
-
   }
 
   const getRomChat = async()=>{
@@ -45,7 +45,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
     console.log(res)
     dispath(updateListRoom(res.msg))
     // console.log('log xong')
-}
+  }
 
   const data = [
     {
@@ -73,8 +73,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
         image:require('../../../assets/img/anh900080.jpg'),
         name:'Thuần',
     },
-]
-
+  ]
+  const SkeletonPost = ()=>(
+    <View style={styles.wrapperSkeletonPost}>
+      <Facebook />
+    </View>
+  )
   return (
     <View style={styles.container}>
       {/* header */}
@@ -104,7 +108,15 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
               {/* new */}
               <News Data={data}/>
               {/* post */}
-                <Post DataPost={dataPost}/>  
+              {!showContent ? 
+                <>
+                  <SkeletonPost/>
+                  <SkeletonPost/>
+                  <SkeletonPost/>
+                </>
+                :
+                <Post DataPost={dataPost}/>
+              }  
         </VirtualizedViewFlaslist>
     </View>
   )
@@ -124,7 +136,6 @@ const styles = StyleSheet.create({
 
   },
   search:{
-
     width: 35,
     height:35,
     borderRadius: 50,
@@ -144,5 +155,20 @@ const styles = StyleSheet.create({
   },
   gruopRight:{
     flexDirection: 'row'
+  },
+  wrapperSkeletonPost:{
+    borderRadius:10,
+    flex:1,
+    backgroundColor:'white',
+    padding:10,
+    margin:10,
+    shadowColor:'#000',
+    shadowOffset:{
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: .3,
+    shadowRadius: 5,
+    elevation: 10
   }
 })

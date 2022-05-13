@@ -32,8 +32,6 @@ function GettingVideo({route, navigation}){
     const [ caller, setCaller ] = useState("");
     const [ name, setName ] = useState("");
     const [ callerSignal, setCallerSignal ] = useState();
-   
-
     const dispatch = useDispatch();
     const {datacall,idRoomCall,statusCall,visibleCall} = useSelector(e=>e.MessengesReducer);
    
@@ -43,37 +41,37 @@ function GettingVideo({route, navigation}){
     //     setMyVideo();
     // }, [])
 
-        //Run calling
-        useEffect(()=>{
-          if(visibleCall){
-              if(statusCall==="calling"){
-                  setstatusCalling(true);
-                  if(!statusCalling){
-                      callUser();
-                  }
-                  socket.on("user-left-call",async(data)=>{
-                      if(callAccepted===false){
-                          if(data.positionSocket===0){
-                              // await sendMessCall();
-                          }
-                          // audioPhoneHangUpRef.current.play();
-                          setrejectCall(true);
-                          setstatusCalling(false);
-                      }else{
-                          leaveCall();
-                      }
-                  })
-              }
-          }
-          return ()=>{
-              socket.off("user-left-call")
-          }
-      },[visibleCall,statusCall,callAccepted]);
+    //Run calling
+    useEffect(()=>{
+        if(visibleCall){
+            if(statusCall==="calling"){
+                setstatusCalling(true);
+                if(!statusCalling){
+                    callUser();
+                }
+                socket.on("user-left-call",async(data)=>{
+                    if(callAccepted===false){
+                        if(data.positionSocket===0){
+                            // await sendMessCall();
+                        }
+                        // audioPhoneHangUpRef.current.play();
+                        setrejectCall(true);
+                        setstatusCalling(false);
+                    }else{
+                        leaveCall();
+                    }
+                })
+            }
+        }
+        return ()=>{
+            socket.off("user-left-call")
+        }
+    },[visibleCall,statusCall,callAccepted]);
 
-      const leaveCall = async() => {
-        // await sendMessCall();
-		    connectionRef.current.destroy();
-	    }
+    const leaveCall = async() => {
+      // await sendMessCall();
+      connectionRef.current.destroy();
+    }
 
 
 
@@ -108,9 +106,14 @@ function GettingVideo({route, navigation}){
                   config: {
                     iceServers: [
                       {
-                        urls: "turn:numb.viagenie.ca",
-                        credential: "muazkh",
-                        username: "webrtc@live.com",
+                        urls: "stun:numb.viagenie.ca",
+                        credential: "128Dat128",
+                        username: "kennavi281@gmail.com",
+                      },
+                      {
+                          urls: "turn:numb.viagenie.ca",
+                          credential: "128Dat128",
+                          username: "kennavi281@gmail.com",
                       },
                       // { urls: 'stun:stun.l.google.com:19302' }, 
                       // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
@@ -202,23 +205,23 @@ function GettingVideo({route, navigation}){
     //       });  
     // } 
 
-        //Return to default state
-        const handleInit = async()=>{
-          // audioPhoneHangUpRef.current.play();
-          dispatch(updateIdRoomCall(null));
-          dispatch(updateStatusCall(null));
-          dispatch(updateVisibleCall(false));
-          setReceivingCall(false);
-          setCallAccepted(false);
-          setCaller("");
-          setName("");
-          setCallerSignal();
-          // setmoveMyvideo(false);
-          setuserToCall();
-          // settotalTime(0);
-          navigation.goBack();
-          
-      }
+    //Return to default state
+    const handleInit = async()=>{
+      // audioPhoneHangUpRef.current.play();
+      dispatch(updateIdRoomCall(null));
+      dispatch(updateStatusCall(null));
+      dispatch(updateVisibleCall(false));
+      setReceivingCall(false);
+      setCallAccepted(false);
+      setCaller("");
+      setName("");
+      setCallerSignal();
+      // setmoveMyvideo(false);
+      setuserToCall();
+      // settotalTime(0);
+      navigation.goBack();
+    }
+    
     return(
         <View style={{ flex:1 }}>
             <StatusBar 

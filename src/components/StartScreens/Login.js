@@ -7,6 +7,8 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import * as GETAPI from '../../util/fetchApi';
+import { useDispatch } from 'react-redux';
+import { updateFollowers,updateFollowing,updateUer } from '../../../redux/reducers/user.reducer';
 const loginValidationSchema = yup.object().shape({
     username: yup
         .string()
@@ -21,6 +23,7 @@ const loginValidationSchema = yup.object().shape({
 export default function Login({navigation, route}){
     const [showPass, setshowPass] = useState(true);  
     const formRef = useRef();
+    const dispath = useDispatch();
 
     useEffect(() => {
         if(route.params!==undefined){
@@ -31,9 +34,9 @@ export default function Login({navigation, route}){
     },[])
 
     const handlesubmit = async(values,{setErrors})=>{
-        // console.log(values)
+        console.log(values)
         const res = await GETAPI.postDataAPI('/user/login',{'data':values});
-        // console.log("day la log : ",res)
+        console.log("day la log : ",res)
         if(res.msg === "Invalid account"){
             setErrors({username:'Tài khoản không tồn tại!'})
         }else if(res.msg === "Incorrect password"){
@@ -46,14 +49,45 @@ export default function Login({navigation, route}){
                 ToastAndroid.CENTER
               );
             await AsyncStorage.setItem('token',res.token);
-            const a = await AsyncStorage.getItem('token');
-            // console.log('..............: ', a)
+            await CheckAuth();
             navigation.replace('home')
         }
         
     }
 
-
+    const CheckAuth  = async()=>{
+        const token = await AsyncStorage.getItem('token');//Get token
+        if(token === null || token === undefined){
+            return false;
+        }
+        //get user
+        const data = {'token':token}
+        const res = await GETAPI.postDataAPI('/user/getUser',data);
+        // console.log("day laf logmoi:",res);
+        if(res.msg){
+            if(res.msg.message ==='jwt expired'){
+                ToastAndroid.showWithGravity(
+                    'Phiên đăng nhập đã hết!!!',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER
+                )
+                await AsyncStorage.removeItem('token');
+                return false;
+            }
+        }else {
+            if(res[0].status === 1){
+                await AsyncStorage.removeItem('token');
+                return false;
+            }else{
+                const followers = await GETAPI.postDataAPI("/user/getFollowers",{"idUser":res[0].idUser});
+                const followings = await GETAPI.postDataAPI("/user/getFollowings",{'idUser':res[0].idUser});
+                dispath(updateUer(res[0]))
+                dispath(updateFollowers(followers.msg))
+                dispath(updateFollowing(followings.msg))
+                return true;
+             }
+            }
+    }
   return (
     <View style={styles.container}>
         <Image 
@@ -72,6 +106,17 @@ export default function Login({navigation, route}){
                 SPACE SOCIAL
             </Text>
         </LinearTextGradient>
+        <LinearTextGradient
+            style={{fontSize:20, fontWeight: 'bold'}}
+            locations={[0,1]}
+            colors={['red','blue']}
+            start={{ x:0, y:0 }}
+            end={{ x:1, y: 0 }}
+            >
+            <Text>
+                Đăng nhập
+            </Text>
+        </LinearTextGradient>
         <Formik
              validationSchema={loginValidationSchema}
              initialValues={{ username: '', password: '' }}
@@ -80,7 +125,7 @@ export default function Login({navigation, route}){
         >
         {({ 
         handleChange,
-         handleBlur,
+        handleBlur,
         handleSubmit,                    
         values,
         errors,
@@ -88,11 +133,11 @@ export default function Login({navigation, route}){
         touched  }) => (
         <>
             <View style={styles.formlogin}>
-                <Text style={{ fontSize:25, color:'blue', fontWeight:'bold'}}>SIGN IN</Text>
+                {/* <Text style={{ fontSize:23, color:'blue', fontWeight:'bold'}}>Đăng nhập</Text> */}
                 <View style={{...styles.wrapIcon, marginTop: 40}}>
                     <TextInput
                         name='username'
-                        placeholder='UserName' 
+                        placeholder='Tên đăng nhập' 
                         style={styles.InputText}
                         onChangeText={handleChange('username')}
                         onBlur={handleBlur('username')}
@@ -107,7 +152,7 @@ export default function Login({navigation, route}){
                 <View style={{...styles.wrapIcon, marginTop: 20}}>
                     <TextInput 
                         name='password'
-                        placeholder='Password' 
+                        placeholder='Mật khẩu' 
                         style={styles.InputText}
                         secureTextEntry={showPass}
                         onChangeText={handleChange('password')}
@@ -128,17 +173,16 @@ export default function Login({navigation, route}){
                         <Text style={styles.errorText}>{errors.password}</Text>
                     }
                 <TouchableOpacity 
-                style={styles.btnlogin} 
-                onPress={handleSubmit}
-                
+                    style={styles.btnlogin} 
+                    onPress={handleSubmit}
                 >
-                    <Text style={{ fontWeight: 'bold', fontSize:14, color:'white' }}>Sign in</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize:14, color:'white' }}>Đăng nhập</Text>
                 </TouchableOpacity>
 
                 <View style={ styles.toRegister }>
-                    <Text style={{ color: 'black' }}>Do you have an account?</Text>
+                    <Text style={{ color: 'black' }}>Bạn có muốn tạo tài khoản mới?</Text>
                     <TouchableOpacity onPress={()=>navigation.navigate("register")}>
-                        <Text style={{ color: '#02A8EA', fontWeight:'bold' }}> Sign up</Text>
+                        <Text style={{ color: '#02A8EA', fontWeight:'bold' }}> Đăng ký</Text>
                     </TouchableOpacity>
                 </View>
             
@@ -186,16 +230,15 @@ const styles = StyleSheet.create({
         width: '80%',
         height: 40,
     },
-
     wrapIcon:{
         justifyContent: 'space-between',
         flexDirection:'row',
         alignItems:'center',
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: 'blue',
         width: windowW*0.85,
         borderRadius: 10,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
     btnlogin:{
         marginTop: 20,
