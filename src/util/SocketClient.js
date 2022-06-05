@@ -3,13 +3,16 @@ import React ,{useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import * as FetchAPI from './fetchApi';
 import {updateDataFriend,updateUserOnline} from '../../redux/reducers/user.reducer';
-import { updateCall, updateMessenges } from '../../redux/reducers/messenges.reducer';
+import { updateCall, updateMessenges,updateStatusCall,updateIdRoomCall,updateVisibleCall } from '../../redux/reducers/messenges.reducer';
 import { Audio } from './Audio'
+import { useNavigation } from '@react-navigation/native';
+
 export default function SocketClient({socket}) {
+    const navigation = useNavigation();
     const {currentUser,followers,followings,currentIdRoom} = useSelector(e=>e.UserReducer);
     const {currentMessenges, datacall} = useSelector(e=>e.MessengesReducer);
-
     const dispatch = useDispatch();
+
     //JoinUser
     useEffect(() => {
         if(currentUser!==null){
@@ -20,8 +23,6 @@ export default function SocketClient({socket}) {
             socket.off('joinUser');
         }
     }, [socket, currentUser])
-
-
 
     //GetUserOnl
     useEffect(() => {
@@ -104,6 +105,7 @@ export default function SocketClient({socket}) {
             dispatch(updateStatusCall("called"));
             dispatch(updateIdRoomCall(data.idRoom));
             dispatch(updateVisibleCall(true));
+            navigation.navigate("videocall")
 		})
         return () => {
             socket.off("callUser");

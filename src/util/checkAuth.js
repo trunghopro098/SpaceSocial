@@ -11,7 +11,6 @@ export const CheckAuth  = async(dispath)=>{
     //get user
     const data = {'token':token}
     const res = await GETAPI.postDataAPI('/user/getUser',data);
-    // console.log("day laf logmoi:",res);
     if(res.msg){
         if(res.msg.message ==='jwt expired'){
             ToastAndroid.showWithGravity(

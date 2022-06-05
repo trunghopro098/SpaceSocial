@@ -13,8 +13,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
 const Tab = createBottomTabNavigator();
 
-export default function TabBottomNavigation() {
-  return (
+export default function TabBottomNavigation({navigation}) {
+
+    return (
     <View style={styles.container}>
         <StatusBar 
             backgroundColor="rgb(240, 240, 240)"

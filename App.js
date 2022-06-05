@@ -17,12 +17,14 @@ import Login from './src/components/StartScreens/Login';
 import { Audio } from './src/util/Audio';
 import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
  import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
+
 const Stack = createStackNavigator();
 const socket = io(API_URL+'/');
-const App = ()=>{
+
+function App(){
   const [user, setuser] = useState(false);
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
-
+  
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
   ]);
@@ -33,12 +35,10 @@ const App = ()=>{
   useEffect(() => {
     if(currentUser !== null){
       setuser(true);
+      console.log(API_URL)
       // Audio('ting.mp3');
       // console.log(currentUser)
     }
-
-    
-
   }, [currentUser])
   
 

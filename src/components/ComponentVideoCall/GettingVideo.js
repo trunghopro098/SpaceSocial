@@ -25,9 +25,12 @@ function GettingVideo({route, navigation}){
     const connectionRef = useRef();
     const [Camera, setCamera] = useState(false);
     const [myStream, setmyStream] = useState();
+    const [streamUser, setstreamUser] = useState();
     const [callAccepted, setCallAccepted] = useState(false);
     const [statusCalling, setstatusCalling] = useState(false);
     const [receivingCall,setReceivingCall] = useState(false);
+    const [ rejectCall, setrejectCall] = useState(false);
+    const [missCall, setmissCall] = useState(false);
     const [userToCall,setuserToCall] = useState("");
     const [ caller, setCaller ] = useState("");
     const [ name, setName ] = useState("");
@@ -72,70 +75,111 @@ function GettingVideo({route, navigation}){
         }
     },[visibleCall,statusCall,callAccepted]);
 
+    //Run called
+    useEffect(() => {
+      if(visibleCall){
+          if(statusCall==="called"){
+              console.log("zô")
+              if(datacall!==null){
+                  if(!callAccepted){
+                      setReceivingCall(true);
+                      setCaller(datacall.from);
+                      setName(datacall.name);
+                      setCallerSignal(datacall.signal);
+                      // audioPhoneRef.current.play();
+                  }
+                  if(rejectCall){
+                      setrejectCall(false);
+                  }
+                  if(missCall){
+                      setmissCall(false);
+                  }
+                  socket.on("user-left-call",async(data)=>{
+                      if(callAccepted){
+                          leaveCall();
+                          // if(connectionRef.current){
+                              
+                          //     // await sendMessCall();
+                          //     // connectionRef.current.destroy();
+                          //     // handleInit();
+                          // }
+                      }else{
+                          if(data.positionSocket===0){
+                              await sendMessCall();
+                          }
+                          // audioPhoneRef.current.pause();
+                          setmissCall(true);
+                          setReceivingCall(false);
+                      }
+                  })
+                  
+              }
+          }
+      }
+      return ()=>{
+          socket.off("user-left-call")
+      }
+    },[datacall,visibleCall,statusCall,callAccepted])
+
     const leaveCall = async() => {
       // await sendMessCall();
       connectionRef.current.destroy();
     }
 
-
-
     const callUser = async() => {
       const data = {"idRoom":idRoomCall,"idUser":currentUser.idUser};
       const res = await FetchAPI.postDataAPI("/messenges/getReciver",data);
       const idTocall = res.msg;
-        mediaDevices.enumerateDevices().then(sourceInfos => {
-          // console.log(sourceInfos)
-         
-          let videoSourceId;
-          for (let i = 0; i < sourceInfos.length; i++) {
-            const sourceInfo = sourceInfos[i];
-            if(sourceInfo.kind == "videoinput" && sourceInfo.facing == (isFront ? "front" : "environment")) {
-              videoSourceId = sourceInfo.deviceId;
-            }
+      mediaDevices.enumerateDevices().then(sourceInfos => {
+        // console.log(sourceInfos)
+        let videoSourceId;
+        for (let i = 0; i < sourceInfos.length; i++) {
+          const sourceInfo = sourceInfos[i];
+          if(sourceInfo.kind == "videoinput" && sourceInfo.facing == (isFront ? "front" : "environment")) {
+            videoSourceId = sourceInfo.deviceId;
           }
-          mediaDevices.getUserMedia({
-            audio: true,
-            video: {
-              frameRate: 30,
-              facingMode: (isFront ? "user" : {exact:"environment"}),
-              deviceId: videoSourceId
-            }
-            
-          })
-          
-          .then(stream => {
-                setmyStream(stream);
-                const peer = new Peer({
-                  initiator: true,
-                  trickle: false,
-                  stream: stream,
-                  config: {
-                    iceServers: [
-                      {
-                        urls: "stun:numb.viagenie.ca",
+        }
+        mediaDevices.getUserMedia({
+          audio: true,
+          video: {
+            frameRate: 30,
+            facingMode: (isFront ? "user" : {exact:"environment"}),
+            deviceId: videoSourceId
+          }
+        })
+        .then(stream => {
+              setmyStream(stream);
+              const peer = new Peer({
+                initiator: true,
+                trickle: false,
+                stream: stream,
+                config: {
+                  iceServers: [
+                    {
+                      urls: "stun:numb.viagenie.ca",
+                      credential: "128Dat128",
+                      username: "kennavi281@gmail.com",
+                    },
+                    {
+                        urls: "turn:numb.viagenie.ca",
                         credential: "128Dat128",
                         username: "kennavi281@gmail.com",
-                      },
-                      {
-                          urls: "turn:numb.viagenie.ca",
-                          credential: "128Dat128",
-                          username: "kennavi281@gmail.com",
-                      },
-                      // { urls: 'stun:stun.l.google.com:19302' }, 
-                      // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
-                    ],
-                  },
-                  wrtc: {
-                    RTCPeerConnection,
-                    RTCIceCandidate,
-                    RTCSessionDescription,
-                    RTCView,
-                    MediaStream,
-                    MediaStreamTrack,
-                    mediaDevices,
-                    registerGlobals
-                  },
-                })
+                    },
+                    // { urls: 'stun:stun.l.google.com:19302' }, 
+                    // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
+                  ],
+                },
+                wrtc: {
+                  RTCPeerConnection,
+                  RTCIceCandidate,
+                  RTCSessionDescription,
+                  RTCView,
+                  MediaStream,
+                  MediaStreamTrack,
+                  mediaDevices,
+                  registerGlobals
+                },
+              })
           
                 peer._debug = console.log;
                 peer.on("signal", (data) => {
@@ -149,16 +193,16 @@ function GettingVideo({route, navigation}){
                 })
                 peer.on("stream", (stream) => {
                     console.log("hello")
-                    if(videoUserRef.current){
-                        videoUserRef.current.srcObject = stream
-                    }
+                    setstreamUser(stream)
+                    // if(videoUserRef.current){
+                    //     videoUserRef.current.srcObject = stream
+                    // }
                 })
                 peer.on('close',() => {
                     handleInit();
                 });
                 socket.on("callAccepted", (signal) => {
-                    console.log("zoâ")
-                    // setCallAccepted(true)
+                    setCallAccepted(true)
                     // myVideoRef.current.srcObject = stream;
                     peer.signal(signal);
                     // setstatusCalling(false);
@@ -171,7 +215,9 @@ function GettingVideo({route, navigation}){
                     }
                 })
                 connectionRef.current = peer
-              })
+
+          
+          })
           .catch(error => {
               console.log("loi roi", error)
           });
@@ -227,17 +273,23 @@ function GettingVideo({route, navigation}){
     }
     
     return(
-        <View style={{ flex:1 }}>
+        <View style={{ flex:1}}>
             <StatusBar 
               backgroundColor={'white'}
               barStyle={'dark-content'}/>
-            <View>
-                {myStream !==undefined &&
-                    <RTCView  objectFit="cover" style={styles.rtcView} streamURL={myStream.toURL()} />
-                }
-            </View>
-                {
-                  !callAccepted && 
+              <View style={{position:'relative'}}>
+                <View>
+                  {myStream !==undefined && callAccepted &&
+                    <RTCView objectFit="cover" style={styles.rtcView} streamURL={myStream.toURL()} />
+                  }
+                </View>
+                <View>
+                  {streamUser !==undefined &&
+                    <RTCView style={styles.rtcViewUser} streamURL={streamUser.toURL()} />
+                  }
+                </View>
+              </View>
+              {!callAccepted && statusCalling && 
                   <View style = {styles.call_wait_accept}>
                       <View style={styles.Wrap_Call}>
                       
@@ -267,7 +319,31 @@ function GettingVideo({route, navigation}){
                           </TouchableOpacity>
                       </View>
                   </View>
-                } 
+              }
+              <View>
+                {receivingCall && !callAccepted ? (
+                  <View >
+                    {/* <Image source={} width={200} height={200}/> */}
+                    <Text>{name} đang gọi...</Text>
+                    <View >
+                        <View >
+                        <TouchableOpacity style={styles.rejectCall}>
+                           <Text>Từ chối</Text>
+                        </TouchableOpacity>
+                       
+                        </View>
+
+                        <View >
+                        <TouchableOpacity>
+                            <Text>Trả lời</Text>
+                        </TouchableOpacity>
+                       
+                        </View>
+                    </View>
+      
+                  </View>
+                ) : null}
+              </View>
 
         </View>
     )
@@ -275,16 +351,23 @@ function GettingVideo({route, navigation}){
 // Later on in your styles..
 var styles = StyleSheet.create({
     rtcView: {
+      width:windowW*0.5,
+      height:windowH*0.3,
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      right: 0,
+      zIndex:1,
+    //   backgroundColor:'red'
+    },
+    rtcViewUser:{
       width:windowW,
       height:windowH,
       position: 'absolute',
       top: 0,
-      left: 0,
       bottom: 0,
-      right: 0,
-      flex:1,
-      zIndex: 1,
-      backgroundColor:'red'
+      left:0,
+      zIndex:-1
     },
     call_wait_accept:{
       flex: 1,
@@ -324,6 +407,12 @@ var styles = StyleSheet.create({
       alignContent:'center',
       alignItems:'center',
       borderRadius:50
+    },
+    rejectCall:{
+      backgroundColor:"red",
+      padding:20,
+      borderRadius:20,
+      
     }
   });
 export default GettingVideo;
