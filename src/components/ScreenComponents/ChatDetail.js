@@ -54,6 +54,8 @@ export default function ChatDetail({route, navigation}) {
 
 
     const sendMess = async()=>{
+        console.log("sended")
+        console.log(text)
         if(text!==""){
             const encode_text = endCode(text);
             const data = {"idUser":currentUser.idUser,"idRoom":idRoom,"message":encode_text,"typeMess":0};
@@ -73,11 +75,11 @@ export default function ChatDetail({route, navigation}) {
     }
 
     const handleCallVideo = ()=>{
-        // dispatch(updateStatusCall("calling"));
-        // dispatch(updateIdRoomCall(idRoom));
-        // dispatch(updateVisibleCall(true));
-        // // console.log("dang goi")
-        // navigation.navigate("videocall",{item: item})
+        dispatch(updateStatusCall("calling"));
+        dispatch(updateIdRoomCall(idRoom));
+        dispatch(updateVisibleCall(true));
+        console.log("dang goi")
+        navigation.navigate("videocall",{item: item})
 
         let i = 0;
         listRevicer.map(e=>{
@@ -355,9 +357,16 @@ export default function ChatDetail({route, navigation}) {
                         paddingHorizontal: 15,
                         textAlignVertical:'center'
                     }}
+                    onChangeText={settext}
+                    value={text}
                     onPressOut={()=>setshowTool(false)}
             />
-            <TouchableOpacity style={{ marginLeft:"auto",marginRight:5 }}>
+            <TouchableOpacity
+             style={{ marginLeft:"auto",marginRight:5 }}
+             onPress={()=>{
+                sendMess()  
+             }}
+            >
                 <Ionicons name='send' size={29} color='#0083E1' />
             </TouchableOpacity>
         </View>

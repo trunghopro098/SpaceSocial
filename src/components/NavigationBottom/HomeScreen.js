@@ -22,6 +22,7 @@ import { Facebook } from 'react-content-loader/native';
   useEffect(() => {
     if(currentUser !== null){
       getDataPost();
+      // console.log(dataPost)
     }
   }, [currentUser])
 
@@ -115,7 +116,7 @@ import { Facebook } from 'react-content-loader/native';
                   <SkeletonPost/>
                 </>
                 :
-                <Post DataPost={dataPost}/>
+                <Post DataPost={dataPost} navigation = {navigation}/>
               }  
         </VirtualizedViewFlaslist>
     </View>

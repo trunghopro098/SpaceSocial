@@ -16,7 +16,7 @@ import {API_URL} from "@env";
 import Login from './src/components/StartScreens/Login';
 import { Audio } from './src/util/Audio';
 import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
- 
+ import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
 const Stack = createStackNavigator();
 const socket = io(API_URL+'/');
 const App = ()=>{
@@ -54,6 +54,7 @@ const App = ()=>{
       >
         <Stack.Screen name='videocall' component={GettingVideo} initialParams={{socket:socket}}/>
         <Stack.Screen name='login' component={Login}/>
+        <Stack.Screen name='profile' component={ProfileScreen}/>
         <Stack.Screen name='splash' component={Splash}/>
         <Stack.Screen name='home' component={TabBottomNavigation} />
         <Stack.Screen name='register' component={Register} options={{headerShown:true,title:"Đăng ký"}}/>

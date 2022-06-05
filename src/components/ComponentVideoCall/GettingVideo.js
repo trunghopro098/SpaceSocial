@@ -37,17 +37,21 @@ function GettingVideo({route, navigation}){
    
     // console.log(item);
     let isFront = true;
-    // useEffect(() => {
-    //     setMyVideo();
-    // }, [])
+    useEffect(() => {
+        setMyVideo();
+    }, [])
 
     //Run calling
     useEffect(()=>{
+     
         if(visibleCall){
             if(statusCall==="calling"){
+              
                 setstatusCalling(true);
                 if(!statusCalling){
+                  
                     callUser();
+                    
                 }
                 socket.on("user-left-call",async(data)=>{
                     if(callAccepted===false){
@@ -81,6 +85,7 @@ function GettingVideo({route, navigation}){
       const idTocall = res.msg;
         mediaDevices.enumerateDevices().then(sourceInfos => {
           // console.log(sourceInfos)
+         
           let videoSourceId;
           for (let i = 0; i < sourceInfos.length; i++) {
             const sourceInfo = sourceInfos[i];
@@ -95,10 +100,11 @@ function GettingVideo({route, navigation}){
               facingMode: (isFront ? "user" : {exact:"environment"}),
               deviceId: videoSourceId
             }
+            
           })
+          
           .then(stream => {
                 setmyStream(stream);
-            
                 const peer = new Peer({
                   initiator: true,
                   trickle: false,
@@ -130,7 +136,7 @@ function GettingVideo({route, navigation}){
                     registerGlobals
                   },
                 })
-            
+          
                 peer._debug = console.log;
                 peer.on("signal", (data) => {
                     socket.emit("callUser", {
@@ -165,8 +171,6 @@ function GettingVideo({route, navigation}){
                     }
                 })
                 connectionRef.current = peer
-
-          
               })
           .catch(error => {
               console.log("loi roi", error)
@@ -174,36 +178,36 @@ function GettingVideo({route, navigation}){
         });  
 	  }
 
-    // const setMyVideo = async()=>{
-    //     mediaDevices.enumerateDevices().then(sourceInfos => {
-    //         console.log(sourceInfos)
-    //         let videoSourceId;
-    //         for (let i = 0; i < sourceInfos.length; i++) {
-    //           const sourceInfo = sourceInfos[i];
-    //           if(sourceInfo.kind == "videoinput" && sourceInfo.facing == (isFront ? "front" : "environment")) {
-    //             videoSourceId = sourceInfo.deviceId;
-    //           }
-    //         }
+    const setMyVideo = async()=>{
+        mediaDevices.enumerateDevices().then(sourceInfos => {
+            console.log(sourceInfos)
+            let videoSourceId;
+            for (let i = 0; i < sourceInfos.length; i++) {
+              const sourceInfo = sourceInfos[i];
+              if(sourceInfo.kind == "videoinput" && sourceInfo.facing == (isFront ? "front" : "environment")) {
+                videoSourceId = sourceInfo.deviceId;
+              }
+            }
 
-    //         mediaDevices.getUserMedia({
-    //           audio: true,
-    //           video: {
-    //             // width: 640,
-    //             // height: 480,
-    //             frameRate: 30,
-    //             facingMode: (isFront ? "user" : {exact:"environment"}),
-    //             deviceId: videoSourceId
-    //           }
-    //         })
-    //         .then(stream => {
-    //           // Got stream!
-    //             setmyStream(stream)
-    //         })
-    //         .catch(error => {
-    //             console.log("loi roi", error)
-    //         });
-    //       });  
-    // } 
+            mediaDevices.getUserMedia({
+              audio: true,
+              video: {
+                // width: 640,
+                // height: 480,
+                frameRate: 30,
+                facingMode: (isFront ? "user" : {exact:"environment"}),
+                deviceId: videoSourceId
+              }
+            })
+            .then(stream => {
+              // Got stream!
+                setmyStream(stream)
+            })
+            .catch(error => {
+                console.log("loi roi", error)
+            });
+          });  
+    } 
 
     //Return to default state
     const handleInit = async()=>{
@@ -227,11 +231,11 @@ function GettingVideo({route, navigation}){
             <StatusBar 
               backgroundColor={'white'}
               barStyle={'dark-content'}/>
-            {/* <View>
+            <View>
                 {myStream !==undefined &&
                     <RTCView  objectFit="cover" style={styles.rtcView} streamURL={myStream.toURL()} />
                 }
-            </View> */}
+            </View>
                 {
                   !callAccepted && 
                   <View style = {styles.call_wait_accept}>
@@ -279,7 +283,8 @@ var styles = StyleSheet.create({
       bottom: 0,
       right: 0,
       flex:1,
-    //   backgroundColor:'red'
+      zIndex: 1,
+      backgroundColor:'red'
     },
     call_wait_accept:{
       flex: 1,

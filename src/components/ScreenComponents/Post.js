@@ -13,7 +13,7 @@ import LayoutImgPost from '../../components/ScreenComponents/LayoutImgPost'
 import SubStr from '../StartScreens/SubStr'
 
 
-function Post({DataPost}) {
+function Post({DataPost, navigation}) {
 
     const CurrentDay = Date.now();
     const renderItem = ({item})=>{
@@ -22,13 +22,12 @@ function Post({DataPost}) {
                 <View style={styles.headerPost}>
                     <View style={styles.headerAvatar}>
                         {item.avatar === null ?
-                            <View >
+                            
                                 <Image 
                                     source={require('../../../assets/img/avatar.jpg')}
                                     style={{ width: 50, height: 50, borderRadius:50 }}
                                     resizeMode='cover'
-                                    />
-                            </View>:
+                                    />:
                                 <Image 
                                     source={{ uri:API_URL+item.avatar}}
                                     style={{ width: 50, height: 50, borderRadius:50 }}
@@ -43,7 +42,14 @@ function Post({DataPost}) {
                                 marginTop: 5
                             }}
                         >
-                            <Text style={{ fontWeight: 'bold',color:'black',fontSize: 14 }}>{item.lastName} {item.firstName}</Text>
+                                <TouchableOpacity
+                                    onPress={()=>{
+                                        // console.log(item.idUser)
+                                        navigation.navigate("profile",{"idUser": item.idUser})
+                                    }}
+                                >
+                                    <Text style={{ fontWeight: 'bold',color:'black',fontSize: 14 }}>{item.lastName} {item.firstName}</Text>
+                                </TouchableOpacity>
                             <View 
                                 style={{
                                     flexDirection:'row',
