@@ -29,6 +29,8 @@ function GettingVideo({route, navigation}){
     const [callAccepted, setCallAccepted] = useState(false);
     const [statusCalling, setstatusCalling] = useState(false);
     const [receivingCall,setReceivingCall] = useState(false);
+    const [ rejectCall, setrejectCall] = useState(false);
+    const [missCall, setmissCall] = useState(false);
     const [userToCall,setuserToCall] = useState("");
     const [ caller, setCaller ] = useState("");
     const [ name, setName ] = useState("");
@@ -69,12 +71,56 @@ function GettingVideo({route, navigation}){
         }
     },[visibleCall,statusCall,callAccepted]);
 
+    //Run called
+    useEffect(() => {
+      if(visibleCall){
+          if(statusCall==="called"){
+              console.log("zô")
+              if(datacall!==null){
+                  if(!callAccepted){
+                      setReceivingCall(true);
+                      setCaller(datacall.from);
+                      setName(datacall.name);
+                      setCallerSignal(datacall.signal);
+                      // audioPhoneRef.current.play();
+                  }
+                  if(rejectCall){
+                      setrejectCall(false);
+                  }
+                  if(missCall){
+                      setmissCall(false);
+                  }
+                  socket.on("user-left-call",async(data)=>{
+                      if(callAccepted){
+                          leaveCall();
+                          // if(connectionRef.current){
+                              
+                          //     // await sendMessCall();
+                          //     // connectionRef.current.destroy();
+                          //     // handleInit();
+                          // }
+                      }else{
+                          if(data.positionSocket===0){
+                              await sendMessCall();
+                          }
+                          // audioPhoneRef.current.pause();
+                          setmissCall(true);
+                          setReceivingCall(false);
+                      }
+                  })
+                  
+              }
+          }
+      }
+      return ()=>{
+          socket.off("user-left-call")
+      }
+    },[datacall,visibleCall,statusCall,callAccepted])
+
     const leaveCall = async() => {
       // await sendMessCall();
       connectionRef.current.destroy();
     }
-
-
 
     const callUser = async() => {
       const data = {"idRoom":idRoomCall,"idUser":currentUser.idUser};
@@ -239,8 +285,7 @@ function GettingVideo({route, navigation}){
                   }
                 </View>
               </View>
-                {
-                  !callAccepted && 
+              {!callAccepted && statusCalling && 
                   <View style = {styles.call_wait_accept}>
                       <View style={styles.Wrap_Call}>
                       
@@ -270,7 +315,31 @@ function GettingVideo({route, navigation}){
                           </TouchableOpacity>
                       </View>
                   </View>
-                } 
+              }
+              <View>
+                {receivingCall && !callAccepted ? (
+                  <View >
+                    {/* <Image source={} width={200} height={200}/> */}
+                    <Text>{name} đang gọi...</Text>
+                    <View >
+                        <View >
+                        <TouchableOpacity style={styles.rejectCall}>
+                           <Text>Từ chối</Text>
+                        </TouchableOpacity>
+                       
+                        </View>
+
+                        <View >
+                        <TouchableOpacity>
+                            <Text>Trả lời</Text>
+                        </TouchableOpacity>
+                       
+                        </View>
+                    </View>
+      
+                  </View>
+                ) : null}
+              </View>
 
         </View>
     )
@@ -334,6 +403,12 @@ var styles = StyleSheet.create({
       alignContent:'center',
       alignItems:'center',
       borderRadius:50
+    },
+    rejectCall:{
+      backgroundColor:"red",
+      padding:20,
+      borderRadius:20,
+      
     }
   });
 export default GettingVideo;
