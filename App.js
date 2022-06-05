@@ -33,6 +33,7 @@ const App = ()=>{
   useEffect(() => {
     if(currentUser !== null){
       setuser(true);
+      console.log(API_URL)
       // Audio('ting.mp3');
       // console.log(currentUser)
     }
