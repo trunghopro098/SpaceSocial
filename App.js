@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
-import { StyleSheet,LogBox, StatusBar} from 'react-native';
+import { StyleSheet,LogBox, StatusBar,View} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import TabBottomNavigation from './src/components/NavigationBottom/TabBottomNavigation';
 import Register from './src/components/StartScreens/Register';
 import ScanQrCode from './src/components/StartScreens/ScanQRCode';
-import ProfileScan from './src/components/StartScreens/ProfileScan';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Splash from './src/components/StartScreens/Splash';
 import ChatDetail from './src/components/ScreenComponents/ChatDetail';
 import SocketClient from './src/util/SocketClient';
@@ -18,6 +17,8 @@ import { Audio } from './src/util/Audio';
 import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
  import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
 import ImgDetail from './src/components/StartScreens/ImgDetail';
+import FpsCounter from './src/FpsCounter'
+
 const Stack = createStackNavigator();
 const socket = io(API_URL+'/');
 
@@ -48,6 +49,10 @@ function App(){
       backgroundColor={'white'}
       barStyle={'dark-content'}/>
       {user && <SocketClient socket={socket}/>}
+      {/* <View style={{width:"100%",height:50}}>
+        <FpsCounter visible={true} />
+      </View> */}
+      
       <Stack.Navigator
         initialRouteName='splash'
         screenOptions={{ headerShown:false }}

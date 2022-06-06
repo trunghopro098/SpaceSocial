@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, Alert } from 'react-native'
-import React,{useEffect, useRef, useState} from 'react'
+import React,{useEffect, useLayoutEffect, useRef, useState} from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { SetHTTP } from '../../util/SetHTTP';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -17,7 +17,6 @@ import CallTime from '../StartScreens/CallTime';
 
 export default function ChatDetail({route, navigation}) {
     const {currentUser,userOnline} = useSelector(e=>e.UserReducer);
-    console.log(userOnline);
     const {currentMessenges} = useSelector(e=>e.MessengesReducer);
     const idUser = currentUser.idUser;
     const {socket,item} = route.params;
@@ -28,7 +27,7 @@ export default function ChatDetail({route, navigation}) {
     const dispatch = useDispatch();
     const [listRevicer, setlistRevicer] = useState([]);
     const [showMess, setshowMess] = useState(false)
-    let viewBot = useRef(null)
+    let viewBot = useRef(null);
 
     useEffect(() => {
       setshowMess(false);
@@ -234,7 +233,7 @@ export default function ChatDetail({route, navigation}) {
     }
 
 
-  return (
+    return (
     <View style={styles.container}>
         <StatusBar 
             backgroundColor={'white'}
@@ -242,8 +241,12 @@ export default function ChatDetail({route, navigation}) {
         <View style={styles.header}>
             <View style={styles.headerLeft}>
                 <TouchableOpacity 
-                    onPress={()=>{
-                        navigation.goBack();
+                    onPress={(e)=>{
+                        e.preventDefault();
+                        if (navigation.canGoBack())
+                            navigation.goBack()
+                        else
+                            navigation.navigate('home')
                     }
                 }>
                     <AntDesign name='arrowleft' size={25} color='blue' style={{ marginRight: 10 }}/>
@@ -315,16 +318,20 @@ export default function ChatDetail({route, navigation}) {
             </View>
         </View>
         <View style={styles.contentMess}>
-            {showMess &&
+            {showMess ?
                 <FlatList
                     data={currentMessenges}
                     renderItem={renderItem}
-                    keyExtractor={(item, index)=>index.toString()}
-                    ref={(ref)=>viewBot=ref}
+                    keyExtractor={(_,index)=>index.toString()}
+                    ref={e=>viewBot=e}
                     onContentSizeChange={() => viewBot.scrollToEnd({animated: true})}
                     onLayout={() => viewBot.scrollToEnd({animated: true})}
-                    // style={{ marginBottom: 10 }}
+                    initialNumToRender={currentMessenges.length}
                 />
+                :
+                <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                    <Text>Đang tải tin nhắn, vui lòng đợi...</Text>
+                </View>
             }
         </View>
         <View style={styles.bottomContentMess}>
@@ -349,7 +356,7 @@ export default function ChatDetail({route, navigation}) {
                     placeholder='Aa'
                     style={{ 
                         marginHorizontal: 3,
-                        width: showTool ? windowW*0.66:windowW*0.77,
+                        width: showTool ? windowW*0.62:windowW*0.75,
                         height:"90%",
                         backgroundColor:'#E9E9E9',
                         borderRadius: 50,
@@ -361,10 +368,10 @@ export default function ChatDetail({route, navigation}) {
                     onPressOut={()=>setshowTool(false)}
             />
             <TouchableOpacity
-             style={{ marginLeft:"auto",marginRight:5 }}
-             onPress={()=>{
-                sendMess()  
-             }}
+                style={{ marginLeft:"auto",marginRight:2 }}
+                onPress={()=>{
+                    sendMess()  
+                }}
             >
                 <Ionicons name='send' size={29} color='#0083E1' />
             </TouchableOpacity>

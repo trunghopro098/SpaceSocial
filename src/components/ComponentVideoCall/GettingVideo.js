@@ -134,7 +134,7 @@ function GettingVideo({route, navigation}){
     },[callAccepted])
 
     const leaveCall = async() => {
-      // await sendMessCall();
+      await sendMessCall();
       connectionRef.current.destroy();
     }
 
@@ -418,8 +418,10 @@ function GettingVideo({route, navigation}){
               backgroundColor={'white'}
               barStyle={'dark-content'}/>
               <View style={{position:'relative'}}>
+                {callAccepted &&
+                <>
                 <View>
-                  {myStream !==undefined && callAccepted &&
+                  {myStream !==undefined &&
                     <RTCView objectFit="cover" style={styles.rtcView} streamURL={myStream.toURL()} />
                   }
                 </View>
@@ -428,6 +430,17 @@ function GettingVideo({route, navigation}){
                     <RTCView style={styles.rtcViewUser} streamURL={streamUser.toURL()} />
                   }
                 </View>
+                <View style={styles.wrapperBtnEndCall}>
+                  <TouchableOpacity
+                    style={styles.endCall}
+                    onPress={leaveCall}
+                  >
+                    <MaterialIcons style={styles.iconBtnReceivingCall} name="call-end"/>
+                    <Text style={styles.txtBtnReceivingCall}>Kết thúc</Text>
+                  </TouchableOpacity>
+                </View>
+                </>
+                }
               </View>
               {!callAccepted && statusCalling && 
                   <View style = {styles.call_wait_accept}>
@@ -579,7 +592,20 @@ var styles = StyleSheet.create({
       backgroundColor:"red",
       padding:20,
       borderRadius:80,
-
+    },
+    endCall:{
+      position:'absolute',
+      display:'flex',
+      justifyContent:'center',
+      alignItems:'center',
+      flexDirection:'row',
+      width:120,
+      backgroundColor:"red",
+      padding:20,
+      borderRadius:80,
+      top:windowH*0.85,
+      left:windowW*0.35,
+      zIndex:1000
     },
     acceptCall:{
       display:'flex',
