@@ -128,7 +128,7 @@ export default function ChatScreen({navigation}) {
                         <TouchableOpacity>
                             <Image 
                               source={require('../../../assets/img/avatar.jpg')}
-                              style={{ width: 48, height: 48, borderRadius:50 }}
+                              style={{ width: 40, height: 40, borderRadius:50 }}
                               resizeMode='cover'
                             />
                         </TouchableOpacity>:
@@ -136,7 +136,7 @@ export default function ChatScreen({navigation}) {
                               <Image
                                   source={{ uri:SetHTTP(currentUser.avatar)}}
                                   resizeMode='cover'
-                                  style={{ width: 48, height: 48, borderRadius: 50 }}
+                                  style={{ width: 40, height: 40, borderRadius: 50 }}
                                 />
                         </TouchableOpacity>
                     }
