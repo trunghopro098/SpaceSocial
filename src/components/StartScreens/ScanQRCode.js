@@ -15,7 +15,7 @@ function ScanQrCode({navigation}){
             const {idUser,type} = dataArr;
             if(idUser!==undefined&&type!==undefined){
                 if(type==="space_social"){ 
-                    navigation.replace('profilescan',{idUser:idUser})
+                    navigation.replace('profile',{idUser:idUser})
                 }else{
                     ToastAndroid.showWithGravityAndOffset(
                         "Không tìm thấy người dùng !!",

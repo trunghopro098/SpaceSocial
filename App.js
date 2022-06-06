@@ -59,7 +59,7 @@ function App(){
         <Stack.Screen name='home' component={TabBottomNavigation} />
         <Stack.Screen name='register' component={Register} options={{headerShown:true,title:"Đăng ký"}}/>
         <Stack.Screen name='scanqr' component={ScanQrCode} options={{headerShown:true,title:"Quét bạn bè"}}/>
-        <Stack.Screen name='profilescan' component={ProfileScan} />
+        {/* <Stack.Screen name='profilescan' component={ProfileScan} /> */}
         <Stack.Screen name='chatdetail' component={ChatDetail}  initialParams={{socket:socket}}/>
       </Stack.Navigator>
     </NavigationContainer>

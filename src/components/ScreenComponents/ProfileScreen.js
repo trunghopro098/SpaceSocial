@@ -117,7 +117,7 @@ export default function ProfileScreen(props,{navigation}) {
                       </TouchableOpacity>
                       <TouchableOpacity style={{ ...styles.btnFllowFrenid, width: "50%" }}>
                           <AntDesign name='check' size={18} color='white' style={{marginRight: 5}}/>
-                          <Text style={{ ...styles.text, fontSize: 12 }}>Đang theo giỏi</Text>
+                          <Text style={{ ...styles.text, fontSize: 12 }}>Đang theo dõi</Text>
                       </TouchableOpacity>
               </View>
 
@@ -304,8 +304,8 @@ const styles = StyleSheet.create({
     backgroundColor:'white'
   },
   textColor:{
-    color:'#DA8EFD',
-    fontWeight:'bold'
+    color:'#3b75df',
+    fontWeight:'400'
   },
   editProfile:{
     position:'absolute',
