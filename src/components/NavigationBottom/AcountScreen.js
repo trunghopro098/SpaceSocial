@@ -4,13 +4,12 @@ import * as FetchAPI from "../../util/fetchApi";
 import { useSelector } from 'react-redux';
 import ProfileScreen from '../ScreenComponents/ProfileScreen';
 import { windowH,windowW } from '../../util/Dimension';
-export default function AcountScreen() {
+export default function AcountScreen({navigation}) {
   const [user, setuser] = useState(false);
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
-
   return (
     <View style={styles.container}>
-      <ProfileScreen idUser = {currentUser.idUser}/>
+      <ProfileScreen idUser = {currentUser.idUser} navigation={navigation} />
     </View>
   )
 }

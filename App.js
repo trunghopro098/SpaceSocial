@@ -17,7 +17,7 @@ import Login from './src/components/StartScreens/Login';
 import { Audio } from './src/util/Audio';
 import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
  import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
-
+import ImgDetail from './src/components/StartScreens/ImgDetail';
 const Stack = createStackNavigator();
 const socket = io(API_URL+'/');
 
@@ -61,6 +61,7 @@ function App(){
         <Stack.Screen name='scanqr' component={ScanQrCode} options={{headerShown:true,title:"Quét bạn bè"}}/>
         {/* <Stack.Screen name='profilescan' component={ProfileScan} /> */}
         <Stack.Screen name='chatdetail' component={ChatDetail}  initialParams={{socket:socket}}/>
+        <Stack.Screen name='imagedetail' component={ImgDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   )

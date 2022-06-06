@@ -11,6 +11,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
+import ProfileScreen from '../ScreenComponents/ProfileScreen';
 const Tab = createBottomTabNavigator();
 
 export default function TabBottomNavigation({navigation}) {

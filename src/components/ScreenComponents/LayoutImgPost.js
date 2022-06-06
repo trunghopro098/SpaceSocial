@@ -1,57 +1,80 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect } from 'react'
 import { SetHTTP } from '../../util/SetHTTP'
 import { windowH, windowW } from '../../util/Dimension'
 
-export default function LayoutImgPost({image}) {
-
+export default function LayoutImgPost({image,navigation, postData}) {
   
   const Layout1 = ()=>
     (
-      <View style={styles.img1}>
-        <Image
-            source={{ uri: SetHTTP(image[0].url)}}
-            resizeMode='cover'
-            style={{ width: windowW * 0.9, height: windowH*0.35, borderRadius: 5 }}             
-        />
-        </View>
+      <TouchableOpacity 
+          onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+          style={styles.img1}
+        >
+            <Image
+                source={{ uri: SetHTTP(image[0].url)}}
+                resizeMode='cover'
+                style={{ width: windowW * 0.9, height: windowH*0.35, borderRadius: 5 }}             
+            />
+        </TouchableOpacity>
     )
   const Layout2 = ()=>
       (
         <View style={styles.img2}>
-          <Image
-              source={{ uri: SetHTTP(image[0].url)}}
-              resizeMode='cover'
-              style={{ width: windowW * 0.46, height: windowH*0.2, marginRight: 3, borderRadius: 5 }}             
-          />
-          <Image
-              source={{ uri: SetHTTP(image[1].url)}}
-              resizeMode='cover'
-              style={{ width: windowW * 0.46, height: windowH*0.2, borderRadius: 5}}             
-          />
+            <TouchableOpacity 
+              onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+            >
+              <Image
+                  source={{ uri: SetHTTP(image[0].url)}}
+                  resizeMode='cover'
+                  style={{ width: windowW * 0.46, height: windowH*0.2, marginRight: 3, borderRadius: 5 }}             
+              />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+          >
+              <Image
+                  source={{ uri: SetHTTP(image[1].url)}}
+                  resizeMode='cover'
+                  style={{ width: windowW * 0.46, height: windowH*0.2, borderRadius: 5}}             
+              />
+          </TouchableOpacity>
         </View>
       )
       const Layout3 = ()=>
       (
         <View style={styles.img3}>
             <View style={styles.leftImge}>
+            <TouchableOpacity 
+                onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+            >
                   <Image
                     source={{ uri: SetHTTP(image[0].url)}}
                     resizeMode='cover'
                     style={{ width: windowW * 0.43, height: windowH*0.165, margin: 1, borderRadius: 5 }}             
                 />
-                  <Image
-                    source={{ uri: SetHTTP(image[1].url)}}
-                    resizeMode='cover'
-                    style={{ width: windowW * 0.43, height: windowH*0.165, margin: 1, borderRadius: 5 }}             
-                />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={()=>{navigation.navigate("imagedetail",{"image":imagpostDatae})}} 
+              >
+                      <Image
+                        source={{ uri: SetHTTP(image[1].url)}}
+                        resizeMode='cover'
+                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 1, borderRadius: 5 }}             
+                    />
+              </TouchableOpacity>
             </View>
+
             <View style={styles.rightImge} >
-                  <Image
-                          source={{ uri: SetHTTP(image[2].url)}}
-                          resizeMode='cover'
-                          style={{ width: windowW * 0.45, height: windowH*0.34, margin: 1, borderRadius: 5 }}             
-                      />
+                  <TouchableOpacity 
+                      onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                  >
+                      <Image
+                              source={{ uri: SetHTTP(image[2].url)}}
+                              resizeMode='cover'
+                              style={{ width: windowW * 0.45, height: windowH*0.34, margin: 1, borderRadius: 5 }}             
+                          />
+                </TouchableOpacity>
             </View>
         </View>
       )
@@ -60,28 +83,44 @@ export default function LayoutImgPost({image}) {
       (
         <View style={styles.img4}>
             <View style={styles.left4}>
-                  <Image
-                        source={{ uri: SetHTTP(image[0].url)}}
-                        resizeMode='cover'
-                        style={{ width: windowW * 0.43, height: windowH*0.165, marginTop: 2, borderRadius: 5 }}             
-                    />
+            <TouchableOpacity 
+                onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+            >
+                    <Image
+                          source={{ uri: SetHTTP(image[0].url)}}
+                          resizeMode='cover'
+                          style={{ width: windowW * 0.43, height: windowH*0.165, marginTop: 2, borderRadius: 5 }}             
+                      />
+            </TouchableOpacity>
+            <TouchableOpacity 
+                  onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+              >
                       <Image
                         source={{ uri: SetHTTP(image[1].url)}}
                         resizeMode='cover'
                         style={{ width: windowW * 0.43, height: windowH*0.165, marginTop: 2, borderRadius: 5 }}             
-                    />
+                      />
+            </TouchableOpacity>
             </View>
             <View style={styles.right4}>
-                  <Image
-                        source={{ uri: SetHTTP(image[2].url)}}
-                        resizeMode='cover'
-                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
-                    />
-                      <Image
-                        source={{ uri: SetHTTP(image[3].url)}}
-                        resizeMode='cover'
-                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
-                    />
+                <TouchableOpacity 
+                    onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                  >
+                    <Image
+                          source={{ uri: SetHTTP(image[2].url)}}
+                          resizeMode='cover'
+                          style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                      />
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                >
+                        <Image
+                          source={{ uri: SetHTTP(image[3].url)}}
+                          resizeMode='cover'
+                          style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                      />
+                </TouchableOpacity>
             </View>
         </View>
       )
@@ -89,33 +128,51 @@ export default function LayoutImgPost({image}) {
       (
         <View style={styles.img4}>
             <View style={styles.left4}>
+              <TouchableOpacity 
+                    onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                >
                   <Image
                         source={{ uri: SetHTTP(image[0].url)}}
                         resizeMode='cover'
                         style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                  onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+              >
                       <Image
                         source={{ uri: SetHTTP(image[1].url)}}
                         resizeMode='cover'
                         style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
                     />
+              </TouchableOpacity>
             </View>
             <View style={styles.right4}>
-                  <Image
-                        source={{ uri: SetHTTP(image[2].url)}}
-                        resizeMode='cover'
-                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
-                    />
-                    <View style={styles.imgmore}>
-                      <Image
-                        source={{ uri: SetHTTP(image[3].url)}}
-                        resizeMode='cover'
-                        style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
-                    />
-                      <View style={styles.positionNumberImg}>
-                        <Text style={{ color: 'white', fontSize: 24, fontWeight:'bold', backgroundColor: 'transparent'}}>+ {image.length-4}</Text>
-                      </View>
-                    </View>
+                <TouchableOpacity 
+                  onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                >
+                    <Image
+                          source={{ uri: SetHTTP(image[2].url)}}
+                          resizeMode='cover'
+                          style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                      />
+                </TouchableOpacity>
+                <View style={styles.imgmore}>
+                    <TouchableOpacity 
+                          onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                      >
+                        <Image
+                          source={{ uri: SetHTTP(image[3].url)}}
+                          resizeMode='cover'
+                          style={{ width: windowW * 0.43, height: windowH*0.165, margin: 2, borderRadius: 5 }}             
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}}
+                        style={styles.positionNumberImg}>
+                      <Text style={{ color: 'white', fontSize: 24, fontWeight:'bold', backgroundColor: 'transparent'}}>+ {image.length-4}</Text>
+                    </TouchableOpacity>
+                </View>
 
             </View>
         </View>

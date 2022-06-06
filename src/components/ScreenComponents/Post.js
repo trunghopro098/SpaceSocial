@@ -73,7 +73,8 @@ function Post(props) {
                             {/* <Text style={{ maxWidth: '90%', color:'black' }}>{item.message}</Text> */}
                            <SubStr text={item.message} lengths={200}/>
                     </View>
-                    <LayoutImgPost image={item.arr_img}/>
+                    {/* Image */}
+                    <LayoutImgPost navigation={props.navigation} image={item.arr_img} postData={item}/>
                 </View>
                 <View style={ styles.numberlikeAndComment }>
                     <TouchableOpacity style={styles.itemumberlikeAndComment}>
@@ -110,16 +111,16 @@ function Post(props) {
     }
   return (
       <View>
-    {DataPost.length > 0 ? 
-        <FlatList
-            data={DataPost}
-            renderItem={renderItem}
-            keyExtractor={item=>item.id}
-            showsVerticalScrollIndicator={false}
-            style={{ flex:1,width: windowW, marginBottom: 70}}
-        />:
-        <View><Text>HIỆN KHÔNG CÓ BÀI VIẾT NÀO</Text></View>
-    }
+            {DataPost.length > 0 ? 
+                <FlatList
+                    data={DataPost}
+                    renderItem={renderItem}
+                    keyExtractor={item=>item.id}
+                    showsVerticalScrollIndicator={false}
+                    style={{ flex:1,width: windowW, marginBottom: 70}}
+                />:
+                <View><Text>HIỆN KHÔNG CÓ BÀI VIẾT NÀO</Text></View>
+            }
     </View>
   )
 }

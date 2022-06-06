@@ -13,6 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Facebook } from 'react-content-loader/native';
 // import TruncateText from '../../util/TruncateText';
  function HomeScreen({navigation}) {
+   
   const [showContent, setshowContent] = useState(false);
   const {dataPost, listLike} = useSelector(value=>value.PostReducer)
   const currentUser = useSelector(value=> value.UserReducer.currentUser)

@@ -13,6 +13,7 @@ import ImageProfile from './ImageProfile';
 import Qrcode from './Qrcode';
 
 export default function ProfileScreen(props,{navigation}) { 
+
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
 
     const [idUser, setidUser] = useState();
@@ -61,8 +62,10 @@ export default function ProfileScreen(props,{navigation}) {
       }
     }
     const checkUser = ()=>{
+
         if(props.idUser === undefined){
             const userParam = props.route.params.idUser;
+            
             setidUser(userParam)
             return userParam
         }else{
