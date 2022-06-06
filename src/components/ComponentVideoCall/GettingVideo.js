@@ -13,8 +13,11 @@ import {
 import Peer from "simple-peer";
 import { windowH, windowW } from "../../util/Dimension";
 import { SetHTTP } from '../../util/SetHTTP';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
+import { endCode } from '../../util/crypto';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { updateIdRoomCall, updateMessenges, updateStatusCall, updateVisibleCall } from '../../../redux/reducers/messenges.reducer';
 import * as FetchAPI from '../../util/fetchApi';
 
@@ -32,6 +35,7 @@ function GettingVideo({route, navigation}){
     const [ rejectCall, setrejectCall] = useState(false);
     const [missCall, setmissCall] = useState(false);
     const [userToCall,setuserToCall] = useState("");
+    const [totalTime, settotalTime] = useState(0);
     const [ caller, setCaller ] = useState("");
     const [ name, setName ] = useState("");
     const [ callerSignal, setCallerSignal ] = useState();
@@ -46,7 +50,6 @@ function GettingVideo({route, navigation}){
 
     //Run calling
     useEffect(()=>{
-     
         if(visibleCall){
             if(statusCall==="calling"){
               
@@ -120,6 +123,15 @@ function GettingVideo({route, navigation}){
           socket.off("user-left-call")
       }
     },[datacall,visibleCall,statusCall,callAccepted])
+
+    //Set time call
+    useEffect(() => {
+      if(callAccepted){
+          setInterval(()=>{
+              settotalTime(t=> t+1);
+          },1000)
+      }
+    },[callAccepted])
 
     const leaveCall = async() => {
       // await sendMessCall();
@@ -208,10 +220,13 @@ function GettingVideo({route, navigation}){
                     // setstatusCalling(false);
                 })
                 socket.on("rejectCall", (data)=>{
+                    console.log(data)
                     if(data==="reject"){
-                        // audioPhoneHangUpRef.current.play();
-                        // setrejectCall(true);
-                        // setstatusCalling(false);
+                      console.log("reject")
+                      // audioPhoneHangUpRef.current.play();
+                      setrejectCall(true);
+                      setstatusCalling(false);
+                      handleInit();
                     }
                 })
                 connectionRef.current = peer
@@ -223,6 +238,132 @@ function GettingVideo({route, navigation}){
           });
         });  
 	  }
+
+    const answerCall =() =>  {
+      mediaDevices.enumerateDevices().then(sourceInfos => {
+        let videoSourceId;
+        for (let i = 0; i < sourceInfos.length; i++) {
+          const sourceInfo = sourceInfos[i];
+          if(sourceInfo.kind == "videoinput" && sourceInfo.facing == (isFront ? "front" : "environment")) {
+            videoSourceId = sourceInfo.deviceId;
+          }
+        }
+        mediaDevices.getUserMedia({
+          audio: true,
+          video: {
+            frameRate: 30,
+            facingMode: (isFront ? "user" : {exact:"environment"}),
+            deviceId: videoSourceId
+          }
+        })
+        .then(stream => {
+          setmyStream(stream);
+          setCallAccepted(true);
+              const peer = new Peer({
+                initiator: false,
+                trickle: false,
+                stream: stream,
+                wrtc: {
+                  RTCPeerConnection,
+                  RTCIceCandidate,
+                  RTCSessionDescription,
+                  RTCView,
+                  MediaStream,
+                  MediaStreamTrack,
+                  mediaDevices,
+                  registerGlobals
+                },
+                config: {
+                    iceServers: [
+                        {
+                            urls: "stun:numb.viagenie.ca",
+                            credential: "128Dat128",
+                            username: "kennavi281@gmail.com",
+                        },
+                        {
+                            urls: "turn:numb.viagenie.ca",
+                            credential: "128Dat128",
+                            username: "kennavi281@gmail.com",
+                        },
+                    //   {
+                    //     urls: "turn:numb.viagenie.ca",
+                    //     credential: "muazkh",
+                    //     username: "webrtc@live.com",
+                    //   },
+                    //   { urls: 'stun:stun.l.google.com:19302' }, 
+                    //   { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
+                    ],
+              },
+          })
+          // peer._debug = console.log;
+          peer.on("signal", (data) => {
+            socket.emit("answerCall", { signal: data, to: caller })
+          })
+
+          peer.on("stream", (stream) => {
+            setstreamUser(stream)
+          })
+          peer.on('close',() => {
+              handleInit();
+          });
+          peer.signal(callerSignal);
+          connectionRef.current = peer
+        })
+        .catch(error => {
+          console.log("loi roi", error)
+        });  
+      })
+    }
+
+    const handlerejectCall = async()=>{
+      await sendMessCall();
+      socket.emit("rejectCall", {to: caller});
+      handleInit();
+    }
+
+    const sendMessCall = async() =>{
+      if(statusCall==="calling"&&callAccepted){
+          const idCall = await FetchAPI.postDataAPI("/messenges/getReciver", {"idRoom":idRoomCall,"idUser":currentUser.idUser});
+          const idTocall = idCall.msg;
+          const encode_text = endCode(totalTime.toString());
+          const data = {"idUser":currentUser.idUser,"idRoom":idRoomCall,"message":encode_text,"typeMess":3};
+          const res = await FetchAPI.postDataAPI("/messenges/addMessenger",data);
+          if(res.msg==="Success"){
+              console.log("ok");
+          }
+          socket.emit("chat", {"text":encode_text,"targetId":idTocall,"idRoom":idRoomCall,"typeMess":3});
+      }else if(statusCall==="called"&&callAccepted){
+          const idCall = await FetchAPI.postDataAPI("/messenges/getReciver", {"idRoom":idRoomCall,"idUser":datacall.from});
+          const idTocall = idCall.msg;
+          const encode_text = endCode(totalTime.toString());
+          const data = {"idUser":datacall.from,"idRoom":idRoomCall,"message":encode_text,"typeMess":3};
+          const res = await FetchAPI.postDataAPI("/messenges/addMessenger",data);
+          if(res.msg==="Success"){
+              console.log("ok");
+          }
+          socket.emit("chat", {"text":encode_text,"targetId":idTocall,"idRoom":idRoomCall,"typeMess":3});
+      }else if(statusCall==="calling"&&!callAccepted){
+          const idCall = await FetchAPI.postDataAPI("/messenges/getReciver", {"idRoom":idRoomCall,"idUser":currentUser.idUser});
+          const idTocall = idCall.msg;
+          const encode_text = endCode(totalTime.toString());
+          const data = {"idUser":currentUser.idUser,"idRoom":idRoomCall,"message":encode_text,"typeMess":4};
+          const res = await FetchAPI.postDataAPI("/messenges/addMessenger",data);
+          if(res.msg==="Success"){
+              console.log("ok");
+          }
+          socket.emit("chat", {"text":encode_text,"targetId":idTocall,"idRoom":idRoomCall,"typeMess":4});
+      }else if(statusCall==="called"&&!callAccepted){
+          const idCall = await FetchAPI.postDataAPI("/messenges/getReciver", {"idRoom":idRoomCall,"idUser":datacall.from});
+          const idTocall = idCall.msg;
+          const encode_text = endCode(totalTime.toString());
+          const data = {"idUser":datacall.from,"idRoom":idRoomCall,"message":encode_text,"typeMess":4};
+          const res = await FetchAPI.postDataAPI("/messenges/addMessenger",data);
+          if(res.msg==="Success"){
+              console.log("ok");
+          }
+          socket.emit("chat", {"text":encode_text,"targetId":idTocall,"idRoom":idRoomCall,"typeMess":4});
+      }
+    }
 
     const setMyVideo = async()=>{
         mediaDevices.enumerateDevices().then(sourceInfos => {
@@ -266,9 +407,8 @@ function GettingVideo({route, navigation}){
       setCaller("");
       setName("");
       setCallerSignal();
-      // setmoveMyvideo(false);
       setuserToCall();
-      // settotalTime(0);
+      settotalTime(0);
       navigation.goBack();
     }
     
@@ -295,9 +435,9 @@ function GettingVideo({route, navigation}){
                       
                         {item.avatar === null ?                          
                               <Image 
-                              source={require('../../../assets/img/avatar.jpg')}
-                              style={{ width: 80, height: 80, borderRadius:50 }}
-                              resizeMode='cover'
+                                source={require('../../../assets/img/avatar.jpg')}
+                                style={{ width: 80, height: 80, borderRadius:50 }}
+                                resizeMode='cover'
                               />:             
                                 <Image
                                     source={{ uri:SetHTTP(item.avatar)}}
@@ -312,9 +452,8 @@ function GettingVideo({route, navigation}){
                             </View>
                           <TouchableOpacity
                                style={styles.btn_cancel}
-                               onPress={()=>{
-                                 handleInit();
-                               }}>
+                               onPress={handleInit}
+                              >
                                 <Ionicons name='call' size={30} color='white'/>
                           </TouchableOpacity>
                       </View>
@@ -322,22 +461,26 @@ function GettingVideo({route, navigation}){
               }
               <View>
                 {receivingCall && !callAccepted ? (
-                  <View >
-                    {/* <Image source={} width={200} height={200}/> */}
-                    <Text>{name} đang gọi...</Text>
-                    <View >
+                  <View style={styles.wrapperReceivingCall}>
+                    <Image source={require('../../../assets/img/phone-call.gif')} style={{width:300,height:300}}/>
+                    
+                    <Text style={styles.calledText}>{name} đang gọi...</Text>
+                    <View style={styles.groupBtnReceivingCall}>
                         <View >
-                        <TouchableOpacity style={styles.rejectCall}>
-                           <Text>Từ chối</Text>
-                        </TouchableOpacity>
-                       
+                          <TouchableOpacity 
+                            style={styles.rejectCall}
+                            onPress={handlerejectCall}
+                          >
+                            <MaterialIcons style={styles.iconBtnReceivingCall} name="call-end"/>
+                            <Text style={styles.txtBtnReceivingCall}>Từ chối</Text>
+                          </TouchableOpacity>
                         </View>
 
                         <View >
-                        <TouchableOpacity>
-                            <Text>Trả lời</Text>
+                        <TouchableOpacity style={styles.acceptCall} onPress={answerCall}>
+                            <Feather style={styles.iconBtnReceivingCall} name="phone-call"/>
+                            <Text style={styles.txtBtnReceivingCall}>Trả lời</Text>
                         </TouchableOpacity>
-                       
                         </View>
                     </View>
       
@@ -408,11 +551,56 @@ var styles = StyleSheet.create({
       alignItems:'center',
       borderRadius:50
     },
+    wrapperReceivingCall:{
+      backgroundColor:'white',
+      display:"flex",
+      flexDirection:'column',
+      justifyContent:'center',
+      alignItems:'center',
+      height:windowH
+    },
+    calledText:{
+      fontSize:20,
+      marginVertical:10,
+      fontWeight:'bold'
+    },
+    groupBtnReceivingCall:{
+      width:'100%',
+      display:'flex',
+      flexDirection:'row',
+      justifyContent:'space-around'
+    },
     rejectCall:{
+      display:'flex',
+      justifyContent:'center',
+      alignItems:'center',
+      flexDirection:'row',
+      width:120,
       backgroundColor:"red",
       padding:20,
-      borderRadius:20,
-      
+      borderRadius:80,
+
+    },
+    acceptCall:{
+      display:'flex',
+      justifyContent:'center',
+      alignItems:'center',
+      flexDirection:'row',
+      width:120,
+      backgroundColor:"green",
+      padding:20,
+      borderRadius:80,
+    },
+    txtBtnReceivingCall:{
+      color:"white",
+      fontSize:16,
+      fontWeight:'400'
+    },
+    iconBtnReceivingCall:{
+      color:"white",
+      fontSize:16,
+      fontWeight:'400',
+      marginRight:10
     }
   });
 export default GettingVideo;

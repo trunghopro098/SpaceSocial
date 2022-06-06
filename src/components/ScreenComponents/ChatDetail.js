@@ -54,8 +54,6 @@ export default function ChatDetail({route, navigation}) {
 
 
     const sendMess = async()=>{
-        console.log("sended")
-        console.log(text)
         if(text!==""){
             const encode_text = endCode(text);
             const data = {"idUser":currentUser.idUser,"idRoom":idRoom,"message":encode_text,"typeMess":0};
@@ -67,6 +65,7 @@ export default function ChatDetail({route, navigation}) {
             settext("");
         }
     }
+
     const handleFile = (text)=>{
         const StringFile = deCode(text);
         const lastIndex = StringFile.lastIndexOf("\\");
@@ -90,9 +89,9 @@ export default function ChatDetail({route, navigation}) {
             }
         })
         if(i>0){
-            dispatch(updateStatusCall("calling"));
-            dispatch(updateIdRoomCall(idRoom));
-            dispatch(updateVisibleCall(true));
+            // dispatch(updateStatusCall("calling"));
+            // dispatch(updateIdRoomCall(idRoom));
+            // dispatch(updateVisibleCall(true));
             // console.log("dang goi")
             navigation.navigate("videocall",{item: item})
         }else{
