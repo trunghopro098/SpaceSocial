@@ -1,26 +1,64 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useEffect,useState } from 'react'
 import * as FetchAPI from "../../util/fetchApi";
 import {API_URL} from "@env"
 import {windowW, windowH} from "../../util/Dimension"
 import AntDesign from "react-native-vector-icons/AntDesign"
+import Feather from "react-native-vector-icons/Feather"
+import { useSelector } from 'react-redux';
+import Post from './Post';
+import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
+import FriendUser from './FriendUser';
+import ImageProfile from './ImageProfile';
+import Qrcode from './Qrcode';
 
-export default function ProfileScreen(props) {
+export default function ProfileScreen(props,{navigation}) { 
+  const currentUser = useSelector((value)=> value.UserReducer.currentUser)
+
     const [idUser, setidUser] = useState();
     const [dataUser, setdataUser] = useState([]);
-
-
-
+    const [showMenu, setshowMenu] = useState(1);
+    const [dataPostOfUser, setdataPostOfUser] = useState([]);
+    const [dataFriend, setdataFriend] = useState([]);
+    const [dataImage, setdataImage] = useState([]);
 
     useEffect(() => {
         getInforUser()
+        getDataPost()
+        getFriendUser()
+        getImageUser()
+        // console.log("chayj  ne")
     }, [])
+
+
+    const getDataPost = async()=>{
+      const data = {"sourceId":currentUser.idUser,"targetId":checkUser()};
+      const res = await FetchAPI.postDataAPI("/post/getPostOfUser",data);
+      setdataPostOfUser(res.msg);
+      // console.log(res.msg[0])
+    }
 
     const getInforUser = async()=>{
         const data = {"idUser": checkUser()}
         const res = await FetchAPI.postDataAPI("/user/getFullInforUserById",data);
         setdataUser(res.msg[0])
         
+    }
+
+    const getFriendUser = async()=>{
+      const data = {"idUser":checkUser()};
+      const res = await FetchAPI.postDataAPI("/user/getFriendById",data);
+      setdataFriend(res.msg);
+      console.log(res)
+    }
+
+    const getImageUser = async()=>{
+      const data = {"idUser":checkUser()};
+      const res = await FetchAPI.postDataAPI("/user/getImagePosted",data);
+      if(res.msg){
+          setdataImage(res.msg)
+          
+      }
     }
     const checkUser = ()=>{
         if(props.idUser === undefined){
@@ -35,39 +73,112 @@ export default function ProfileScreen(props) {
     }
 
   return (
-    <View style = {styles.container}>
-      <View style={styles.header}>
-          <Image source={{ uri: API_URL+dataUser.coverImage }}
-                resizeMode='cover'
-                style={styles.imageCover}
-            />
-          <View style={styles.avatar}>
-            {dataUser.avatar === null ? 
-               <Image 
-               source={require('../../../assets/img/avatar.jpg')}
-               style={styles.imageAvatar}
-               resizeMode='cover'
-               />:
-              <Image
-                source={{ uri: API_URL+dataUser.avatar }}
-                resizeMode='cover'
-                style={styles.imageAvatar}
-              />
+   
+      <VirtualizedViewFlaslist style = {styles.container}>
+       
+        <View style={styles.header}>
+          {
+            dataUser.coverImage === null ? 
+            <Image source={require('../../../assets/img/coverImage.jpg')}
+                  resizeMode='cover'
+                  style={styles.imageCover}
+              />:
+              <Image source={{ uri: API_URL+dataUser.coverImage }}
+              resizeMode='cover'
+              style={styles.imageCover}
+          />
+          }
+            <Text style={styles.name}>{dataUser.lastName} {dataUser.firstName}</Text>
+            {currentUser.idUser === idUser && 
+                <TouchableOpacity style={styles.editProfile}>
+                    <Feather name='edit-2' size={20}/>
+                    <Text>Chỉnh sửa</Text>
+                </TouchableOpacity>
             }
-          </View>
-            <View style={styles.followFriend}>
-                
-                    <TouchableOpacity style={styles.btnFllowFrenid}>
-                        <AntDesign name='check' size={18} color='white' style={{marginRight: 5}}/>
-                        <Text style={styles.text}>Bạn bè</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.btnFllowFrenid, width: "50%" }}>
-                        <AntDesign name='check' size={18} color='white' style={{marginRight: 5}}/>
-                        <Text style={{ ...styles.text, fontSize: 12 }}>Đang theo giỏi</Text>
-                    </TouchableOpacity>
+            <View style={styles.avatar}>
+              {dataUser.avatar === null ? 
+                <Image 
+                source={require('../../../assets/img/avatar.jpg')}
+                style={styles.imageAvatar}
+                resizeMode='cover'
+                />:
+                <Image
+                  source={{ uri: API_URL+dataUser.avatar }}
+                  resizeMode='cover'
+                  style={styles.imageAvatar}
+                />
+              }
             </View>
-      </View>
-    </View>
+              <View style={styles.followFriend}>
+                  
+                      <TouchableOpacity style={styles.btnFllowFrenid}>
+                          <AntDesign name='check' size={18} color='white' style={{marginRight: 5}}/>
+                          <Text style={styles.text}>Bạn bè</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{ ...styles.btnFllowFrenid, width: "50%" }}>
+                          <AntDesign name='check' size={18} color='white' style={{marginRight: 5}}/>
+                          <Text style={{ ...styles.text, fontSize: 12 }}>Đang theo giỏi</Text>
+                      </TouchableOpacity>
+              </View>
+
+              <View style={styles.menu}>
+    
+                    <TouchableOpacity 
+                        onPress={()=>{
+                            setshowMenu(1);
+                          }
+                        }
+                      style={styles.btnMenu}
+                    >
+                        <Text style={showMenu == 1? styles.textColor:null}>Bài viết</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        onPress={()=>{
+                            setshowMenu(2);
+                          }
+                        }
+                      style={styles.btnMenu}
+                    >
+                        <Text style={showMenu == 2? styles.textColor:null}>Giới thiệu</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onPress={()=>{
+                            setshowMenu(3);
+                          }
+                        }
+                      style={styles.btnMenu}
+                    >
+                        <Text style={showMenu == 3? styles.textColor:null}>Bạn bè</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onPress={()=>{
+                            setshowMenu(4);
+                          }
+                        }
+                      style={styles.btnMenu}
+                    >
+                        <Text style={showMenu == 4? styles.textColor:null}>Ảnh</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        onPress={()=>{
+                            setshowMenu(5);
+                          }
+                        }
+                      style={styles.btnMenu}
+                    >
+                        <Text style={showMenu == 5? styles.textColor:null}>QR code</Text>
+                    </TouchableOpacity>
+              </View>
+        </View> 
+        <View style={styles.content}>
+             {showMenu ===1 && <Post DataPost={dataPostOfUser} navigation={navigation}/>}
+             {showMenu ===2 && <View><Text>đay là gioi thieu</Text></View>}
+             {showMenu ===3 && <FriendUser DataFriend={dataFriend} navigation={navigation}/>}
+             {showMenu ===4 && <ImageProfile DataImage={dataImage} navigation={navigation}/>}
+             {showMenu ===5 && <Qrcode idUser={idUser}/>}
+        </View>
+      </VirtualizedViewFlaslist>
   )
 }
 
@@ -79,14 +190,23 @@ const styles = StyleSheet.create({
   },
   header:{
     width: windowW,
-    height:220,
+    height:260,
+    shadowColor:"#000",
+    shadowOffset:{
+      width: 2,
+      height: 1
+    },
+    shadowOpacity: .4,
+    shadowRadius: 5,
+    elevation: 2,
+    backgroundColor: 'white'
   },
 
   imageCover:{
     width: "100%",
-    height: '100%',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius:30,
+    height: '70%',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius:20,
     opacity:.8
   },
 
@@ -101,9 +221,9 @@ const styles = StyleSheet.create({
     backgroundColor:'red',
     position: "absolute",
     zIndex: 1,
-    bottom: -25,
+    bottom: 40,
     borderRadius: 50,
-    backgroundColor:"#1DDA19",
+    backgroundColor:"#DEE1E6",
     marginLeft: 20
   },
 
@@ -124,7 +244,7 @@ const styles = StyleSheet.create({
 
     position:"absolute",
     zIndex:1,
-    bottom:10,
+    bottom:95,
     right: 5,
     
 
@@ -145,6 +265,76 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     textAlign:'center',
     fontSize: 13
+  },
+  name:{
+    fontWeight:'bold',
+    position:"absolute",
+    bottom:50,
+    left: 105,
+    color:'black',
+    fontSize:15
+  },
+  menu:{
+    position: "absolute",
+    bottom:-3,
+    height: 32,
+    width:'100%',
+    flexDirection:'row',
+    justifyContent:'space-around'
+    
+
+  },
+  btnMenu:{
+    width: "20%",
+    height: "80%",
+    flexDirection:'row',
+    justifyContent:'center',
+    alignContent:'center',
+    alignItems:'center',
+    marginBottom: 10,
+  
+    shadowColor:'#000',
+    shadowOffset:{
+      width:2,
+      height:3
+    },
+    shadowOpacity:6,
+    shadowRadius: 5,
+    elevation: 5,
+    backgroundColor:'white'
+  },
+  textColor:{
+    color:'#DA8EFD',
+    fontWeight:'bold'
+  },
+  editProfile:{
+    position:'absolute',
+    bottom:40,
+    right: 20,
+    zIndex: 1,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor:'#DEE1E6',
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignContent:'center',
+    alignItems:'center',
+    shadowColor:'#000',
+    shadowOffset:{
+      width:2,
+      height: 3
+    },
+    shadowOpacity:.4,
+    shadowRadius:2,
+    elevation:4,
+  },
+  content:{
+    flex: 1,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignContent:'center',
+    alignItems:'center'
   }
+
 
 })

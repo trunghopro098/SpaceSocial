@@ -1,5 +1,5 @@
 import { View, Text,FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import React,{memo, useState} from 'react'
+import React,{memo} from 'react'
 import { windowH, windowW } from '../../util/Dimension'
 import { SetHTTP } from '../../util/SetHTTP'
 import {API_URL} from "@env"
@@ -13,8 +13,9 @@ import LayoutImgPost from '../../components/ScreenComponents/LayoutImgPost'
 import SubStr from '../StartScreens/SubStr'
 
 
-function Post({DataPost, navigation}) {
-
+function Post(props) {
+    const DataPost = props.DataPost;
+    // console.log("rerender nef")
     const CurrentDay = Date.now();
     const renderItem = ({item})=>{
         return(
@@ -45,7 +46,7 @@ function Post({DataPost, navigation}) {
                                 <TouchableOpacity
                                     onPress={()=>{
                                         // console.log(item.idUser)
-                                        navigation.navigate("profile",{"idUser": item.idUser})
+                                        props.navigation.navigate("profile",{"idUser": item.idUser})
                                     }}
                                 >
                                     <Text style={{ fontWeight: 'bold',color:'black',fontSize: 14 }}>{item.lastName} {item.firstName}</Text>
@@ -108,15 +109,18 @@ function Post({DataPost, navigation}) {
         )
     }
   return (
-  
-    <FlatList
-        data={DataPost}
-        renderItem={renderItem}
-        keyExtractor={item=>item.id}
-        showsVerticalScrollIndicator={false}
-        style={{ flex:1,width: windowW, marginBottom: 70}}
-    />
-    
+      <View>
+    {DataPost.length > 0 ? 
+        <FlatList
+            data={DataPost}
+            renderItem={renderItem}
+            keyExtractor={item=>item.id}
+            showsVerticalScrollIndicator={false}
+            style={{ flex:1,width: windowW, marginBottom: 70}}
+        />:
+        <View><Text>HIỆN KHÔNG CÓ BÀI VIẾT NÀO</Text></View>
+    }
+    </View>
   )
 }
 export default memo(Post);

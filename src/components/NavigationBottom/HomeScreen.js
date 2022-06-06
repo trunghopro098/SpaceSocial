@@ -36,14 +36,14 @@ import { Facebook } from 'react-content-loader/native';
       const data = {idUser:currentUser.idUser};
       const res = await GETAPI.postDataAPI("/post/getPostById",data);
       dispath(updatePostData(res.msg))
-      // console.log(res.msg[4].arr_img);
+      // console.log(res);
       setshowContent(true);
   }
 
   const getRomChat = async()=>{
     const data = {idUser: currentUser.idUser};
     const res = await GETAPI.postDataAPI("/messenges/getListCovensation", data);
-    console.log(res)
+    // console.log(res)
     dispath(updateListRoom(res.msg))
     // console.log('log xong')
   }
