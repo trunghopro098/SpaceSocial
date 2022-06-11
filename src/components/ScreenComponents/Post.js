@@ -11,12 +11,15 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { timeAgo } from '../../util/timeAgo';
 import LayoutImgPost from '../../components/ScreenComponents/LayoutImgPost'
 import SubStr from '../StartScreens/SubStr'
+import ShowIcon from './ShowIcon'
 
 
 function Post(props) {
     const [ShowComent, setShowComent] = useState(false);
-
+    const [showIcon, setshowIcon] = useState(false);
+    const [idPost, setidPost] = useState();
     const DataPost = props.DataPost;
+    // console.log(DataPost)
     const CurrentDay = Date.now();
 
     const handleComent = (id)=>{
@@ -83,6 +86,11 @@ function Post(props) {
                     {/* Image */}
                     <LayoutImgPost navigation={props.navigation} image={item.arr_img} postData={item}/>
                 </View>
+                {showIcon === true && item.id === idPost ? 
+                <View style={styles.showIconPost}>
+                        <ShowIcon id={idPost} setshowIcon={(e)=>setshowIcon(e)}/>
+                </View>:
+                null}
                 <View style={ styles.numberlikeAndComment }>
                     <TouchableOpacity style={styles.itemumberlikeAndComment}>
                         {/* <AntDesign name='like2' size={19}/> */}
@@ -100,7 +108,13 @@ function Post(props) {
                     </TouchableOpacity>
                 </View>
                 <View style={ styles.likeAndComment }>
-                    <TouchableOpacity style={styles.itemumberlikeAndComment}>
+                    <TouchableOpacity 
+                        onLongPress={()=>{
+                            setidPost(item.id)
+                            setshowIcon(true)                            
+                        }}
+                        style={styles.itemumberlikeAndComment}
+                    >
                         <AntDesign name='like2' size={19}/>
                         <Text style={{ marginLeft: 5 }}>Thích</Text>
                     </TouchableOpacity>
@@ -226,5 +240,19 @@ const styles = StyleSheet.create({
         justifyContent:'flex-start',
         alignItems:'center'
     },
+    test:{
+        position:'absolute',
+        zIndex: 1,
+        borderRightColor:'red',
+        
+    },
+    showIconPost:{
+        position:'absolute',
+        zIndex: 1,
+        bottom:43,
+        left:15,
+        
+    },
+
 
 })
