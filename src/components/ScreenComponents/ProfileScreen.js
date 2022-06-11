@@ -11,25 +11,24 @@ import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
 import FriendUser from './FriendUser';
 import ImageProfile from './ImageProfile';
 import Qrcode from './Qrcode';
+import { useNavigation } from '@react-navigation/native';
 
-export default function ProfileScreen(props,{navigation}) { 
-
+export default function ProfileScreen(props) { 
+  const navigation = useNavigation();
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
 
     const [idUser, setidUser] = useState();
     const [dataUser, setdataUser] = useState([]);
     const [showMenu, setshowMenu] = useState(1);
     const [dataPostOfUser, setdataPostOfUser] = useState([]);
-    const [dataFriend, setdataFriend] = useState([]);
-    const [dataImage, setdataImage] = useState([]);
+
+
 
     useEffect(() => {
         getInforUser()
         getDataPost()
-        getFriendUser()
-        getImageUser()
-        // console.log("chayj  ne")
-    }, [])
+
+    }, [idUser])
 
 
     const getDataPost = async()=>{
@@ -46,26 +45,9 @@ export default function ProfileScreen(props,{navigation}) {
         
     }
 
-    const getFriendUser = async()=>{
-      const data = {"idUser":checkUser()};
-      const res = await FetchAPI.postDataAPI("/user/getFriendById",data);
-      setdataFriend(res.msg);
-      console.log(res)
-    }
-
-    const getImageUser = async()=>{
-      const data = {"idUser":checkUser()};
-      const res = await FetchAPI.postDataAPI("/user/getImagePosted",data);
-      if(res.msg){
-          setdataImage(res.msg)
-          
-      }
-    }
     const checkUser = ()=>{
-
         if(props.idUser === undefined){
-            const userParam = props.route.params.idUser;
-            
+            const userParam = props.route.params.idUser;           
             setidUser(userParam)
             return userParam
         }else{
@@ -77,8 +59,7 @@ export default function ProfileScreen(props,{navigation}) {
 
   return (
    
-      <VirtualizedViewFlaslist style = {styles.container}>
-       
+      <VirtualizedViewFlaslist style = {styles.container}>      
         <View style={styles.header}>
           {
             dataUser.coverImage === null ? 
@@ -177,8 +158,8 @@ export default function ProfileScreen(props,{navigation}) {
         <View style={styles.content}>
              {showMenu ===1 && <Post DataPost={dataPostOfUser} navigation={navigation}/>}
              {showMenu ===2 && <View><Text>đay là gioi thieu</Text></View>}
-             {showMenu ===3 && <FriendUser DataFriend={dataFriend} navigation={navigation}/>}
-             {showMenu ===4 && <ImageProfile DataImage={dataImage} navigation={navigation}/>}
+             {showMenu ===3 && <FriendUser idUser ={idUser} navigation={navigation} />}
+             {showMenu ===4 && <ImageProfile idUser ={idUser} navigation={navigation}/>}
              {showMenu ===5 && <Qrcode idUser={idUser}/>}
         </View>
       </VirtualizedViewFlaslist>

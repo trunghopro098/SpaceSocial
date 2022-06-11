@@ -9,15 +9,16 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { timeAgo } from '../../util/timeAgo';
-import LayoutImgPost from '../../components/ScreenComponents/LayoutImgPost'
 import SubStr from '../StartScreens/SubStr'
-import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast'
+
+
 
 function ImgDetail(props) {
     const DataPost = props.route.params.image;
-    // console.log("rerender nef")
+    const DataImage = DataPost.arr_img;
     const CurrentDay = Date.now();
-    console.log(DataPost.arr_img)
+    // console.log(DataImage)
+    // console.log(DataPost.arr_img)
   return (
     <ScrollView>
         <View style={styles.wrapItemPost}>    
@@ -75,8 +76,6 @@ function ImgDetail(props) {
                           {/* <Text style={{ maxWidth: '90%', color:'black' }}>{item.message}</Text> */}
                         <SubStr text={DataPost.message} lengths={200}/>
                   </View>
-                  {/* Image */}
-                  <Text>xin chao</Text>
               </View>
               <View style={ styles.numberlikeAndComment }>
                   <TouchableOpacity style={styles.itemumberlikeAndComment}>
@@ -108,6 +107,35 @@ function ImgDetail(props) {
                       <Text style={{ marginLeft: 5 }}>Chia sẻ</Text>
                   </TouchableOpacity>
               </View>
+          </View>
+          <View style={styles.imageArr}>
+                {
+                DataImage.map((item,index)=>{
+                    return(
+                        <View key={index} style={styles.wrapImage}>
+                            <Image
+                                source={{ uri:SetHTTP(item.url) }}
+                                resizeMode="cover"
+                                style={styles.imgItem}
+                            />
+                            <View style = {styles.itemComent}>
+                                <TouchableOpacity style={styles.itemumberlikeAndComment}>
+                                    <AntDesign name='like2' size={19}/>
+                                    <Text style={{ marginLeft: 5 }}>Thích</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.itemumberlikeAndComment}>
+                                    <MaterialCommunityIcons name='comment-outline' size={18}/>
+                                    <Text style={{ marginLeft: 5 }}>Bình luận</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.itemumberlikeAndComment}>
+                                    <EvilIcons name='share-google' size={19}/>
+                                    <Text style={{ marginLeft: 5 }}>Chia sẻ</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )
+                })
+                }
           </View>
       </ScrollView>
   )
@@ -210,6 +238,30 @@ const styles = StyleSheet.create({
       borderRadius:50,
       borderWidth: 3,
       borderColor:"#DEE1E6"
-    }
+    },
+    imageArr:{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent:'flex-start',
+        alignItems:'center'
+    },
+    wrapImage:{
 
+    },
+    imgItem:{
+        width:windowW,
+        height: windowH*0.5,
+    },
+    itemComent:{
+        width:windowW,
+        height:40,
+        flexDirection:'row',
+        justifyContent:'space-around',
+        alignContent:'center',
+        alignItems:'center',
+        borderWidth: .5
+    },
+
+
+    
 })

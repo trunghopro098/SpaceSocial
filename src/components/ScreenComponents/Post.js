@@ -1,5 +1,5 @@
 import { View, Text,FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import React,{memo} from 'react'
+import React,{memo, useState} from 'react'
 import { windowH, windowW } from '../../util/Dimension'
 import { SetHTTP } from '../../util/SetHTTP'
 import {API_URL} from "@env"
@@ -14,16 +14,23 @@ import SubStr from '../StartScreens/SubStr'
 
 
 function Post(props) {
+    const [ShowComent, setShowComent] = useState(false);
+
     const DataPost = props.DataPost;
-    // console.log("rerender nef")
     const CurrentDay = Date.now();
+
+    const handleComent = (id)=>{
+        console.log(ShowComent)
+        setShowComent(true)
+
+    }
+
     const renderItem = ({item})=>{
         return(
             <View style={styles.wrapItemPost}>    
                 <View style={styles.headerPost}>
                     <View style={styles.headerAvatar}>
                         {item.avatar === null ?
-                            
                                 <Image 
                                     source={require('../../../assets/img/avatar.jpg')}
                                     style={{ width: 50, height: 50, borderRadius:50 }}
@@ -82,7 +89,7 @@ function Post(props) {
                         <Text>{item.numberEmotion=='null'?item.numberEmotion:null}</Text>
                         <Text style={{ marginLeft: 5 }}>Lượt Thích</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.itemumberlikeAndComment}>
+                    <TouchableOpacity  style={styles.itemumberlikeAndComment}>
                         <Text>{item.numberEmotion!=='null'?item.numberEmotion:0}</Text>
                         <Text style={{ marginLeft: 5 }}>Bình Luận</Text>
                     </TouchableOpacity>
@@ -97,7 +104,7 @@ function Post(props) {
                         <AntDesign name='like2' size={19}/>
                         <Text style={{ marginLeft: 5 }}>Thích</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.itemumberlikeAndComment}>
+                    <TouchableOpacity onPress={()=>{handleComent(item.id)}} style={styles.itemumberlikeAndComment}>
                         <MaterialCommunityIcons name='comment-outline' size={18}/>
                         <Text style={{ marginLeft: 5 }}>Bình luận</Text>
                     </TouchableOpacity>
@@ -119,14 +126,16 @@ function Post(props) {
                     showsVerticalScrollIndicator={false}
                     style={{ flex:1,width: windowW, marginBottom: 70}}
                 />:
-                <View><Text>HIỆN KHÔNG CÓ BÀI VIẾT NÀO</Text></View>
+                <View><Text>Hiện không có bài viết nào</Text></View>
             }
+
     </View>
   )
 }
 export default memo(Post);
-const styles = StyleSheet.create({
 
+
+const styles = StyleSheet.create({
     wrapItemPost: {
         backgroundColor: 'white',
         marginHorizontal: 10,
@@ -216,7 +225,6 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'flex-start',
         alignItems:'center'
-    }
-
+    },
 
 })
