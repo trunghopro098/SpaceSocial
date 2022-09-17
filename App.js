@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import 'react-native-gesture-handler';
-import { StyleSheet,LogBox, StatusBar,View} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {StyleSheet, LogBox, StatusBar} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import TabBottomNavigation from './src/components/NavigationBottom/TabBottomNavigation';
 import Register from './src/components/StartScreens/Register';
 import ScanQrCode from './src/components/StartScreens/ScanQRCode';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import Splash from './src/components/StartScreens/Splash';
 import ChatDetail from './src/components/ScreenComponents/ChatDetail';
 import SocketClient from './src/util/SocketClient';
 import io from 'socket.io-client';
-import {API_URL} from "@env";
+import {API_URL} from '@env';
 import Login from './src/components/StartScreens/Login';
-import { Audio } from './src/util/Audio';
 import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
- import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
+import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
 import ImgDetail from './src/components/StartScreens/ImgDetail';
-import FpsCounter from './src/FpsCounter'
+import FpsCounter from './src/FpsCounter';
 
 const Stack = createStackNavigator();
-const socket = io(API_URL+'/');
+const socket = io(API_URL + '/');
 
 function App(){
   const [user, setuser] = useState(false);
-  const currentUser = useSelector((value)=> value.UserReducer.currentUser)
+  const currentUser = useSelector((value) => value.UserReducer.currentUser)
   
   LogBox.ignoreLogs([
     "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",

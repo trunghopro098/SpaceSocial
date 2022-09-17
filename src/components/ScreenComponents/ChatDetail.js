@@ -1,5 +1,5 @@
-import { View, Text, StatusBar, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, Alert } from 'react-native'
-import React,{useEffect, useLayoutEffect, useRef, useState} from 'react'
+import { View, Text, StatusBar, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, Alert, SafeAreaView } from 'react-native'
+import React,{useEffect, useRef, useState} from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { SetHTTP } from '../../util/SetHTTP';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -105,7 +105,7 @@ export default function ChatDetail({route, navigation}) {
     const renderItem = ({item, index})=>{
         // let itemEnd = messenges.length-1;        
         return(
-            <View style={styles.itemMess}>
+            <SafeAreaView style={styles.itemMess}>
                 {/* <View style={idUser === item.sourceId ?styles.you:styles.me} >
                     <Text style={{...styles.text}}>{deCode(item.message)}</Text>
                     <Text>xin chao</Text>
@@ -228,13 +228,13 @@ export default function ChatDetail({route, navigation}) {
                         </View>       
                     </View>
                 }
-            </View>
+            </SafeAreaView>
         )
     }
 
 
     return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
         <StatusBar 
             backgroundColor={'white'}
             barStyle={'dark-content'}/>
@@ -376,7 +376,7 @@ export default function ChatDetail({route, navigation}) {
                 <Ionicons name='send' size={29} color='#0083E1' />
             </TouchableOpacity>
         </View>
-    </View>
+    </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({

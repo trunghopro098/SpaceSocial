@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet,Dimensions,StatusBar} from 'react-native';
+import {View, Text, StyleSheet,Dimensions,StatusBar,SafeAreaView} from 'react-native';
 import {createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from './HomeScreen';
 import ChatScreen from './ChatScreen';
@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator();
 export default function TabBottomNavigation({navigation}) {
 
     return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
         <StatusBar 
             backgroundColor="rgb(240, 240, 240)"
             barStyle="dark-content"
@@ -180,7 +180,7 @@ export default function TabBottomNavigation({navigation}) {
             />
 
         </Tab.Navigator>
-    </View>
+    </SafeAreaView>
   )
 }
 const widthW = Dimensions.get('window').width;

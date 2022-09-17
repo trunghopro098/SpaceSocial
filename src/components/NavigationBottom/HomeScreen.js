@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
 import React, { memo,useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import * as GETAPI from '../../util/fetchApi'; 
@@ -82,7 +82,7 @@ import { Facebook } from 'react-content-loader/native';
     </View>
   )
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* header */}
       {/* <TruncateText/> */}
         <View style={styles.header}>
@@ -120,7 +120,7 @@ import { Facebook } from 'react-content-loader/native';
                 <Post DataPost={dataPost} navigation = {navigation}/>
               }  
         </VirtualizedViewFlaslist>
-    </View>
+    </SafeAreaView>
   )
 }
 export default memo(HomeScreen);

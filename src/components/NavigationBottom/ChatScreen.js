@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList,StatusBar } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList,StatusBar,SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as fecthAPI from '../../util/fetchApi';
@@ -39,7 +39,7 @@ export default function ChatScreen({navigation}) {
 
   const renderItem = ({item})=>{
     return(
-      <View style={styles.wrapperItemchat}>
+      <SafeAreaView style={styles.wrapperItemchat}>
         <TouchableOpacity
             onPress={()=>{
               navigation.navigate('chatdetail',{item: item})
@@ -112,7 +112,7 @@ export default function ChatScreen({navigation}) {
                   </View>
             </View>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     )
   }
 
