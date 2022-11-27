@@ -1,6 +1,7 @@
 // import {API_URL} from "@env";
 // console.log(API_URL);
-const API_URL = 'http://192.168.1.18:3001'
+// const API_URL = 'http://192.168.43.91:3001' // real device
+export const API_URL = 'http://192.168.1.36:3001' // simualator device
 export const getAPI = async(url)=>{
     // console.log(API_URL)
     const res = await fetch(API_URL+url)
