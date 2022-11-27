@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text, StyleSheet,Dimensions,StatusBar,SafeAreaView} from 'react-native';
 import {createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from './HomeScreen';
@@ -12,10 +12,40 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import ProfileScreen from '../ScreenComponents/ProfileScreen';
+import * as GETAPI from '../../util/fetchApi';
+import { updateDataNotification,updateQuantityUnread } from '../../../redux/reducers/notification.reducer';
+import {useDispatch, useSelector} from 'react-redux';
+
 const Tab = createBottomTabNavigator();
 
 export default function TabBottomNavigation({navigation}) {
+    const {currentUser} = useSelector(e => e.UserReducer);
+    const {quantityNotificationUnread,dataNotification} = useSelector(e=>e.NotificationReducer);
+    const dispatch = useDispatch();
 
+    React.useEffect(()=>{
+        if(currentUser != null){
+        getDataNotify()
+        }
+    },[currentUser])
+
+    //Update quantity undread
+    React.useEffect(() => {
+        let i = 0;
+        dataNotification.map(e=>{
+            if(e.read===0){
+                i++
+            }
+        })
+        dispatch(updateQuantityUnread(i));
+    },[dataNotification])
+
+
+    const getDataNotify = async()=>{
+        const data = {"idUser":currentUser.idUser};
+        const res = await GETAPI.postDataAPI("/notification/getNotification",data);
+        dispatch(updateDataNotification(res.msg));
+    } 
     return (
     <SafeAreaView style={styles.container}>
         <StatusBar 
@@ -125,7 +155,8 @@ export default function TabBottomNavigation({navigation}) {
             />
             <Tab.Screen name='Notification' component={NotificationScreen}
                  options={{
-                    tabBarIcon: ({focused})=>(
+                    tabBarIcon: ({focused})=>{
+                        return(
                         <View style={{ alignItems : "center", justifyContent : "center",top:3}}>
                             {focused ? <>
                                 <LinearGradient 
@@ -144,11 +175,14 @@ export default function TabBottomNavigation({navigation}) {
                                         <Text style={{ fontSize : 12 }}>Thông Báo</Text>
                                 </LinearTextGradient>
                             </>:
+
                             <Ionicons name="notifications-outline" size={22} />
                             }
                             
                         </View>
-                    )
+                        )
+                    },
+                    tabBarBadge: quantityNotificationUnread 
                 }}
             />
             <Tab.Screen name='Acount' component={AcountScreen}

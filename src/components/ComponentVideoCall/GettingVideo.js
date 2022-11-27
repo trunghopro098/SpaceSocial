@@ -275,16 +275,29 @@ function GettingVideo({route, navigation}){
                 },
                 config: {
                     iceServers: [
-                        {
-                            urls: "stun:numb.viagenie.ca",
-                            credential: "128Dat128",
-                            username: "kennavi281@gmail.com",
-                        },
-                        {
-                            urls: "turn:numb.viagenie.ca",
-                            credential: "128Dat128",
-                            username: "kennavi281@gmail.com",
-                        },
+                      {
+                        urls: "turn:numb.viagenie.ca",
+                        credential: "muazkh",
+                        username: "webrtc@live.com",
+                      }
+                      // {
+                      //   urls:"stun:192.168.43.91:3478"
+                      // },
+                      // {
+                      //   urls: "turn:192.168.43.91:3478",
+                      //   username: "chien",
+                      //   credential: "123456"
+                      // }
+                        // {
+                        //     urls: "stun:numb.viagenie.ca",
+                        //     credential: "128Dat128",
+                        //     username: "kennavi281@gmail.com",
+                        // },
+                        // {
+                        //     urls: "turn:numb.viagenie.ca",
+                        //     credential: "128Dat128",
+                        //     username: "kennavi281@gmail.com",
+                        // },
                     //   {
                     //     urls: "turn:numb.viagenie.ca",
                     //     credential: "muazkh",
