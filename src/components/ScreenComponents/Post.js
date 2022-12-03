@@ -19,11 +19,11 @@ function Post(props) {
     const [showIcon, setshowIcon] = useState(false);
     const [idPost, setidPost] = useState();
     const DataPost = props.DataPost;
-    // console.log(DataPost)
+    console.log("dataSs",DataPost)
+
     const CurrentDay = Date.now();
 
     const handleComent = (id)=>{
-        console.log(ShowComent)
         setShowComent(true)
 
     }
@@ -90,7 +90,7 @@ function Post(props) {
                 <View style={styles.showIconPost}>
                         <ShowIcon id={idPost} setshowIcon={(e)=>setshowIcon(e)}/>
                 </View>:
-                null}
+                null} 
                 <View style={ styles.numberlikeAndComment }>
                     <TouchableOpacity style={styles.itemumberlikeAndComment}>
                         {/* <AntDesign name='like2' size={19}/> */}

@@ -3,9 +3,8 @@ import React from 'react'
 import { windowH, windowW } from '../../util/Dimension';
 import LottieView from "lottie-react-native";
 export default function ShowIcon(props) {
+
     console.log(props.id)
-
-
     const handlelike = ()=>{
         props.setshowIcon(false)
     }
@@ -14,6 +13,7 @@ export default function ShowIcon(props) {
         <TouchableOpacity 
             onPress={()=>{handlelike(props.id)}}
         >
+            {/* like */}
             <LottieView 
                 source={require('../../../assets/lottifiles/like.json')}
                 style={{ width:55, height:50}}
@@ -21,39 +21,10 @@ export default function ShowIcon(props) {
                 // loop  
             />
         </TouchableOpacity>
-        <TouchableOpacity 
-            onPress={()=>{handlelike(props.id)}}
-        >
-            <LottieView 
-                source={require('../../../assets/lottifiles/heart.json')}
-                style={{ width:55, height:50}}
-                autoPlay
-                // loop  
-            />
-        </TouchableOpacity>
         <TouchableOpacity
             onPress={()=>{handlelike(props.id)}}
         >
-            <LottieView 
-                source={require('../../../assets/lottifiles/phanno.json')}
-                style={{ width:35, height:35}}
-                autoPlay
-                // loop  
-            />
-        </TouchableOpacity>
-        <TouchableOpacity
-            onPress={()=>{handlelike(props.id)}}
-        >
-            <LottieView 
-                source={require('../../../assets/lottifiles/wow.json')}
-                style={{ width:35, height:35, marginLeft: 5}}
-                autoPlay
-                // loop  
-            />
-        </TouchableOpacity>
-        <TouchableOpacity
-            onPress={()=>{handlelike(props.id)}}
-        >
+            {/* heart  heart */}
             <LottieView 
                 source={require('../../../assets/lottifiles/thuongthuong.json')}
                 style={{ width:35, height:35,}}
@@ -61,7 +32,46 @@ export default function ShowIcon(props) {
                 // loop  
             />
         </TouchableOpacity>
-      {/* <Text>{props.id}</Text> */}
+        <TouchableOpacity
+            onPress={()=>{handlelike(props.id)}}
+            // haha
+        >
+            <LottieView 
+                source={require('../../../assets/lottifiles/wow.json')}
+                style={{ width:35, height:35,}}
+                autoPlay
+                // loop  
+            />
+        </TouchableOpacity>
+        <TouchableOpacity 
+            onPress={()=>{handlelike(props.id)}}
+        >
+            {/* heart */}
+            <LottieView 
+                source={require('../../../assets/lottifiles/heart.json')}
+                style={{ width:55, height:50, marginRight:4}}
+                autoPlay
+                // loop  
+            />
+        </TouchableOpacity>
+
+        <Image
+                source={require("../../../assets/img/wow.png")}
+                resizeMode='contain'
+                style={{ width:26, heigh:26}}             
+            />
+
+        <TouchableOpacity
+            onPress={()=>{handlelike(props.id)}}
+        >
+            {/* phan no */}
+            <LottieView 
+                source={require('../../../assets/lottifiles/phanno.json')}
+                style={{ width:35, height:35, marginLeft:4}}
+                autoPlay
+                // loop  
+            />
+        </TouchableOpacity>
     </View>
   )
 }
