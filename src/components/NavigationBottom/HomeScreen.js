@@ -12,19 +12,20 @@ import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Facebook } from 'react-content-loader/native';
 // import TruncateText from '../../util/TruncateText';
- function HomeScreen({navigation}) {
-   
+ function HomeScreen({route, navigation},props) {
   const [showContent, setshowContent] = useState(false);
   const {dataPost, listLike} = useSelector(value=>value.PostReducer)
   const currentUser = useSelector(value=> value.UserReducer.currentUser)
   const {currentMessenges} = useSelector(e=>e.MessengesReducer);
   const dispath = useDispatch();
+  const {socket,item} = route.params;
   
   useEffect(() => {
     if(currentUser !== null){
       getDataPost();
       // console.log(dataPost)
     }
+    // console.log('socket', socket)
   }, [currentUser])
 
   useEffect(() => {
@@ -117,7 +118,7 @@ import { Facebook } from 'react-content-loader/native';
                   <SkeletonPost/>
                 </>
                 :
-                <Post DataPost={dataPost} navigation = {navigation}/>
+                <Post DataPost={dataPost} navigation = {navigation} currentUser={currentUser} socket={socket} />
               }  
         </VirtualizedViewFlaslist>
     </SafeAreaView>

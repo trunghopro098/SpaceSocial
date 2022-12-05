@@ -18,10 +18,12 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
-export default function TabBottomNavigation({navigation}) {
+export default function TabBottomNavigation({route, navigation}) {
     const {currentUser} = useSelector(e => e.UserReducer);
     const {quantityNotificationUnread,dataNotification} = useSelector(e=>e.NotificationReducer);
     const dispatch = useDispatch();
+    const {socket} = route.params;
+
 
     React.useEffect(()=>{
         if(currentUser != null){
@@ -68,7 +70,7 @@ export default function TabBottomNavigation({navigation}) {
 
              }}
         >
-            <Tab.Screen name='Home' component={HomeScreen}
+            <Tab.Screen name='Home' component={HomeScreen} initialParams={{socket: socket}}
                 options={{
                     tabBarIcon: ({focused})=>(
                         <View style={{ alignItems : "center", justifyContent : "center",top:3}}>

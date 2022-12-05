@@ -5,6 +5,9 @@ const postSlice = createSlice({
     initialState:{
         dataPost:[],
         listLike:[],
+        dataPostOfUser:[],
+        postShowingLike:null,
+        dataComment:[]
 
     },
     reducers:{
@@ -13,10 +16,20 @@ const postSlice = createSlice({
         },
         updateListlike:(state, action)=>{
             state.listLike = action.payload;
+        },
+        updatePostShowingLike : (state,action)=>{
+            state.postShowingLike = action.payload;
+        },
+        updateDataPostOfUser: (state,action)=>{
+            state.dataPostOfUser = action.payload;
+        },
+        updateDataComment: (state,action)=>{
+            state.dataComment = action.payload;
         }
+
 
     }
     
 })
-export const {updatePostData, updateListlike} = postSlice.actions;
+export const {updatePostData, updateListlike, updatePostShowingLike, updateDataPostOfUser, updateDataComment  } = postSlice.actions;
 export default postSlice.reducer;

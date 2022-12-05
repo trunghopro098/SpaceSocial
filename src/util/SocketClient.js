@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as FetchAPI from './fetchApi';
 import {updateDataFriend,updateUserOnline} from '../../redux/reducers/user.reducer';
 import { updateCall, updateMessenges,updateStatusCall,updateIdRoomCall,updateVisibleCall } from '../../redux/reducers/messenges.reducer';
+import { updatePostData, updateListlike,updateDataPostOfUser, updatePostShowingLike,updateDataComment } from '../../redux/reducers/post.reducers'
+
 import { Audio } from './Audio'
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,6 +13,8 @@ export default function SocketClient({socket}) {
     const navigation = useNavigation();
     const {currentUser,followers,followings,currentIdRoom} = useSelector(e=>e.UserReducer);
     const {currentMessenges, datacall} = useSelector(e=>e.MessengesReducer);
+    const {dataPost, listLike, postShowingLike, dataPostOfUser,dataComment} = useSelector(value=>value.PostReducer)
+
     const dispatch = useDispatch();
 
     //JoinUser
@@ -111,6 +115,81 @@ export default function SocketClient({socket}) {
             socket.off("callUser");
         }
     },[socket,datacall])
+
+        //Like and Unlike
+        useEffect(() => {
+            socket.on("changeLikePost",(data)=>{
+                let arr_post =  JSON.parse(JSON.stringify(dataPost));
+                let arr_post_of_user = JSON.parse(JSON.stringify(dataPostOfUser));
+                let arr_listLike =  JSON.parse(JSON.stringify(listLike));
+                arr_post.forEach(e=>{
+                    if(e.id===data.id){
+                        if(data.plusLike){
+                            e.numberEmotion++;
+                        }
+                        if(data.idUser===currentUser.idUser){
+                            e.statusLike = data.emotion;
+                        }
+                    }
+                })
+                arr_post_of_user.forEach(e=>{
+                    if(e.id===data.id){
+                        if(data.plusLike){
+                            e.numberEmotion++;
+                        }
+                        if(data.idUser===currentUser.idUser){
+                            e.statusLike = data.emotion;
+                        }
+                    }
+                }) 
+                if(data.id===postShowingLike){
+                    arr_listLike.splice(0,0,
+                        {
+                            idUser:data.idUser,
+                            firstName:data.firstName,
+                            lastName:data.lastName,
+                            avatar:data.avatar,
+                            emotion:data.emotion
+                        }
+                    )
+                    dispatch(updateListlike(arr_listLike));
+                }
+                dispatch(updatePostData(arr_post));
+                dispatch(updateDataPostOfUser(arr_post_of_user));
+            })
+            socket.on("changeUnlikePost", (data)=>{
+                let arr_post =  JSON.parse(JSON.stringify(dataPost));
+                let arr_post_of_user = JSON.parse(JSON.stringify(dataPostOfUser));
+                let arr_listLike =  JSON.parse(JSON.stringify(listLike));
+                arr_post.forEach(e=>{
+                    if(e.id===data.id){
+                        e.numberEmotion--;
+                        if(data.idUser===currentUser.idUser){
+                            e.statusLike = 0;
+                        }
+                    }
+                })
+                arr_post_of_user.forEach(e=>{
+                    if(e.id===data.id){
+                        e.numberEmotion--;
+                        if(data.idUser===currentUser.idUser){
+                            e.statusLike = 0;
+                        }
+                    }
+                })
+                if(data.id===postShowingLike){
+                    const index = arr_listLike.findIndex(e=>e.idUser===data.idUser);
+                    arr_listLike.splice(index,1);
+                    dispatch(updateListlike(arr_listLike));
+                }
+                dispatch(updatePostData(arr_post));
+                dispatch(updateDataPostOfUser(arr_post_of_user));
+            })
+            return () => {
+                socket.off("changeLikePost");
+                socket.off("changeUnlikePost");
+            }
+        },[socket,dataPost,currentUser,listLike,postShowingLike,dataPostOfUser])
 
 
     return (

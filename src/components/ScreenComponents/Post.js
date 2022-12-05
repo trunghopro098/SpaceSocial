@@ -4,6 +4,8 @@ import { windowH, windowW } from '../../util/Dimension'
 import { SetHTTP } from '../../util/SetHTTP'
 import {API_URL} from "@env"
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,20 +14,55 @@ import { timeAgo } from '../../util/timeAgo';
 import LayoutImgPost from '../../components/ScreenComponents/LayoutImgPost'
 import SubStr from '../StartScreens/SubStr'
 import ShowIcon from './ShowIcon'
+import * as GETAPI from '../../util/fetchApi'; 
 
 
 function Post(props) {
+
+    const {currentUser, socket} = props
     const [ShowComent, setShowComent] = useState(false);
     const [showIcon, setshowIcon] = useState(false);
     const [idPost, setidPost] = useState();
     const DataPost = props.DataPost;
-    console.log("dataSs",DataPost)
-
     const CurrentDay = Date.now();
 
     const handleComent = (id)=>{
         setShowComent(true)
 
+    }
+    const handlelike = async(type, item)=>{
+        console.log("data", item)
+        const data = {"idPost":item.id,"idUser":currentUser.idUser,"emotion":type}
+        const res = await GETAPI.postDataAPI("/post/likePost",data);
+        setshowIcon(false)
+        if(res.msg){
+            if(res.msg==="Success"){
+                socket.emit("likePost",{
+                    id:item.id,
+                    idUser:currentUser.idUser,
+                    firstName:currentUser.firstName,
+                    lastName: currentUser.lastName,
+                    avatar: currentUser.avatar,
+                    emotion:type,
+                    plusLike:item.statusLike===null||item.statusLike===0
+                })
+            }
+        }
+    }
+    const handleUnlike = async(item)=>{
+        const data = {"idPost":item.id,"idUser":currentUser.idUser};
+        const res = await GETAPI.postDataAPI("/post/unlikePost",data);
+        if(res.msg){
+            if(res.msg==="Success"){
+                socket.emit("unlikePost",{
+                    id:item.id,
+                    idUser:currentUser.idUser,
+                    firstName:currentUser.firstName,
+                    lastName: currentUser.lastName,
+                    avatar: currentUser.avatar,
+                })
+            }
+        }
     }
 
     const renderItem = ({item})=>{
@@ -88,17 +125,17 @@ function Post(props) {
                 </View>
                 {showIcon === true && item.id === idPost ? 
                 <View style={styles.showIconPost}>
-                        <ShowIcon id={idPost} setshowIcon={(e)=>setshowIcon(e)}/>
+                        <ShowIcon id={idPost} setshowIcon={(e)=>setshowIcon(e)} handlelike={handlelike} item={item}/>
                 </View>:
                 null} 
                 <View style={ styles.numberlikeAndComment }>
                     <TouchableOpacity style={styles.itemumberlikeAndComment}>
                         {/* <AntDesign name='like2' size={19}/> */}
-                        <Text>{item.numberEmotion=='null'?item.numberEmotion:null}</Text>
+                        <Text>{item.numberEmotion!=='null'?item.numberEmotion:0}</Text>
                         <Text style={{ marginLeft: 5 }}>Lượt Thích</Text>
                     </TouchableOpacity>
                     <TouchableOpacity  style={styles.itemumberlikeAndComment}>
-                        <Text>{item.numberEmotion!=='null'?item.numberEmotion:0}</Text>
+                        <Text>{item.numberComment!=='null'?item.numberComment:0}</Text>
                         <Text style={{ marginLeft: 5 }}>Bình Luận</Text>
                     </TouchableOpacity>
                    
@@ -108,16 +145,47 @@ function Post(props) {
                     </TouchableOpacity>
                 </View>
                 <View style={ styles.likeAndComment }>
+                    {item.statusLike === 0 || item.statusLike === null ?
+                        <TouchableOpacity 
+                            onLongPress={()=>{
+                                setidPost(item.id)
+                                setshowIcon(true)                            
+                            }} 
+                            onPress={()=>{handlelike(1, item)}}
+                            style={styles.itemumberlikeAndComment}
+                        >
+                            <AntDesign name='like2' size={19} />
+                            <Text style={{ marginLeft: 5 }}>Thích</Text>
+
+                    </TouchableOpacity>
+                :
                     <TouchableOpacity 
-                        onLongPress={()=>{
-                            setidPost(item.id)
-                            setshowIcon(true)                            
-                        }}
+                        onPress={()=>{handleUnlike(item)}}
                         style={styles.itemumberlikeAndComment}
                     >
-                        <AntDesign name='like2' size={19}/>
-                        <Text style={{ marginLeft: 5 }}>Thích</Text>
+                        {item.statusLike === 1 && <>
+                        <AntDesign name='like1' size={19} color='blue' />
+                        <Text style={{ marginLeft: 5, color:'blue'}}>Đã Thích</Text></>}
+                        {item.statusLike === 2 && <>
+                        <FontAwesome5 name='kiss-wink-heart' size={19} color='red' />
+                        <Text style={{ marginLeft: 5, color:"red" }}>Thương Thương</Text></>}
+                        {item.statusLike === 3 && <>
+                        <FontAwesome5 name='laugh-squint' size={19} color='#ff9900' />
+                        <Text style={{ marginLeft: 5, color :'#ff9900' }}>Ha ha</Text></>}
+                        {item.statusLike === 4 && <>
+                        <Entypo name='emoji-sad' size={19} color='#ff9900' />
+                        <Text style={{ marginLeft: 5, color :'#ff9900' }}>Buồn</Text></>}
+                        {item.statusLike === 5 && <>
+                        <FontAwesome5 name='surprise' size={19} color='#ff9900' />
+                        <Text style={{ marginLeft: 5, color :'#ff9900' }}>Wow</Text></>}
+                        {item.statusLike === 6 && <>
+                        <FontAwesome5 name='angry' size={19} color='red' />
+                        <Text style={{ marginLeft: 5 , color:"red" }}>Tức giận</Text></>}
+                        
                     </TouchableOpacity>
+                }
+
+
                     <TouchableOpacity onPress={()=>{handleComent(item.id)}} style={styles.itemumberlikeAndComment}>
                         <MaterialCommunityIcons name='comment-outline' size={18}/>
                         <Text style={{ marginLeft: 5 }}>Bình luận</Text>
@@ -250,7 +318,7 @@ const styles = StyleSheet.create({
         position:'absolute',
         zIndex: 1,
         bottom:43,
-        left:15,
+        left:5,
         
     },
 

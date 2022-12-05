@@ -17,6 +17,7 @@ import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
 import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
 import ImgDetail from './src/components/StartScreens/ImgDetail';
 import FpsCounter from './src/FpsCounter';
+import Post from './src/components/ScreenComponents/Post';
 
 const Stack = createStackNavigator();
 const socket = io(API_URL + '/');
@@ -60,7 +61,7 @@ function App(){
         <Stack.Screen name='login' component={Login}/>
         <Stack.Screen name='profile' component={ProfileScreen}/>
         <Stack.Screen name='splash' component={Splash}/>
-        <Stack.Screen name='home' component={TabBottomNavigation} />
+        <Stack.Screen name='home' component={TabBottomNavigation} initialParams={{socket:socket}}/>
         <Stack.Screen name='register' component={Register} options={{headerShown:true,title:"Đăng ký"}}/>
         <Stack.Screen name='scanqr' component={ScanQrCode} options={{headerShown:true,title:"Quét bạn bè"}}/>
         {/* <Stack.Screen name='profilescan' component={ProfileScan} /> */}

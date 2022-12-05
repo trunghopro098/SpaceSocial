@@ -4,14 +4,14 @@ import { windowH, windowW } from '../../util/Dimension';
 import LottieView from "lottie-react-native";
 export default function ShowIcon(props) {
 
-    console.log(props.id)
-    const handlelike = ()=>{
-        props.setshowIcon(false)
+    const handlelike = (num, item)=>{
+        props.handlelike(num, item)
     }
+
   return (
     <View style={styles.container}>
         <TouchableOpacity 
-            onPress={()=>{handlelike(props.id)}}
+            onPress={()=>{handlelike(1, props.item)}}
         >
             {/* like */}
             <LottieView 
@@ -22,7 +22,7 @@ export default function ShowIcon(props) {
             />
         </TouchableOpacity>
         <TouchableOpacity
-            onPress={()=>{handlelike(props.id)}}
+            onPress={()=>{handlelike(2, props.item)}}
         >
             {/* heart  heart */}
             <LottieView 
@@ -33,36 +33,45 @@ export default function ShowIcon(props) {
             />
         </TouchableOpacity>
         <TouchableOpacity
-            onPress={()=>{handlelike(props.id)}}
+            onPress={()=>{handlelike(3, props.item)}}
             // haha
         >
             <LottieView 
                 source={require('../../../assets/lottifiles/wow.json')}
-                style={{ width:35, height:35,}}
+                style={{ width:38, height:38,}}
                 autoPlay
                 // loop  
             />
         </TouchableOpacity>
         <TouchableOpacity 
-            onPress={()=>{handlelike(props.id)}}
+            onPress={()=>{handlelike(4, props.item)}}
+            style={{marginHorizontal:10}}
         >
             {/* heart */}
             <LottieView 
-                source={require('../../../assets/lottifiles/heart.json')}
-                style={{ width:55, height:50, marginRight:4}}
+                source={require('../../../assets/lottifiles/sad.json')}
+                style={{ width:32, height:32}}
                 autoPlay
                 // loop  
             />
         </TouchableOpacity>
 
-        <Image
+        <TouchableOpacity 
+            onPress={()=>{handlelike(5, props.item)}}
+            style={{marginHorizontal:10}}
+
+        >
+            {/* woww */}
+            <Image
                 source={require("../../../assets/img/wow.png")}
                 resizeMode='contain'
-                style={{ width:26, heigh:26}}             
+                style={{ width:26, height:26}}             
             />
+        </TouchableOpacity>
+
 
         <TouchableOpacity
-            onPress={()=>{handlelike(props.id)}}
+            onPress={()=>{handlelike(6, props.item)}}
         >
             {/* phan no */}
             <LottieView 
