@@ -11,7 +11,7 @@ import Splash from './src/components/StartScreens/Splash';
 import ChatDetail from './src/components/ScreenComponents/ChatDetail';
 import SocketClient from './src/util/SocketClient';
 import io from 'socket.io-client';
-import {API_URL} from '@env';
+import { API_URL } from './src/util/config';
 import Login from './src/components/StartScreens/Login';
 import GettingVideo from './src/components/ComponentVideoCall/GettingVideo';
 import ProfileScreen from './src/components/ScreenComponents/ProfileScreen';
@@ -59,7 +59,7 @@ function App(){
       >
         <Stack.Screen name='videocall' component={GettingVideo} initialParams={{socket:socket}}/>
         <Stack.Screen name='login' component={Login}/>
-        <Stack.Screen name='profile' component={ProfileScreen}/>
+        <Stack.Screen name='profile' component={ProfileScreen} initialParams={{socket:socket}}/>
         <Stack.Screen name='splash' component={Splash}/>
         <Stack.Screen name='home' component={TabBottomNavigation} initialParams={{socket:socket}}/>
         <Stack.Screen name='register' component={Register} options={{headerShown:true,title:"Đăng ký"}}/>

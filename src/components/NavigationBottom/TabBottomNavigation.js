@@ -213,6 +213,7 @@ export default function TabBottomNavigation({route, navigation}) {
                         </View>
                     )
                 }}
+                initialParams={{socket:socket}}
             />
 
         </Tab.Navigator>

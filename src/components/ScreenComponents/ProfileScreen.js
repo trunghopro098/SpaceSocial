@@ -1,7 +1,8 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
 import React, { useEffect,useState } from 'react'
 import * as FetchAPI from "../../util/fetchApi";
-import {API_URL} from "@env"
+import { SetHTTP } from '../../util/SetHTTP';
+import { API_URL } from '../../util/config';
 import {windowW, windowH} from "../../util/Dimension"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Feather from "react-native-vector-icons/Feather"
@@ -12,50 +13,60 @@ import FriendUser from './FriendUser';
 import ImageProfile from './ImageProfile';
 import Qrcode from './Qrcode';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage  from '@react-native-async-storage/async-storage'
 
 export default function ProfileScreen(props) { 
   const navigation = useNavigation();
   const currentUser = useSelector((value)=> value.UserReducer.currentUser)
+  const {socket} = props?.route.params
+  const [idUser, setidUser] = useState();
+  const [dataUser, setdataUser] = useState([]);
+  const [showMenu, setshowMenu] = useState(1);
+  const [dataPostOfUser, setdataPostOfUser] = useState([]);
 
-    const [idUser, setidUser] = useState();
-    const [dataUser, setdataUser] = useState([]);
-    const [showMenu, setshowMenu] = useState(1);
-    const [dataPostOfUser, setdataPostOfUser] = useState([]);
+  useEffect(() => {
+      getInforUser()
+      getDataPost()
 
-
-
-    useEffect(() => {
-        getInforUser()
-        getDataPost()
-
-    }, [idUser])
+  }, [idUser])
 
 
-    const getDataPost = async()=>{
-      const data = {"sourceId":currentUser.idUser,"targetId":checkUser()};
-      const res = await FetchAPI.postDataAPI("/post/getPostOfUser",data);
-      setdataPostOfUser(res.msg);
-      // console.log(res.msg[0])
+  const getDataPost = async()=>{
+    const data = {"sourceId":currentUser.idUser,"targetId":checkUser()};
+    const res = await FetchAPI.postDataAPI("/post/getPostOfUser",data);
+    setdataPostOfUser(res.msg);
+    // console.log(res.msg[0])
+  }
+
+  const getInforUser = async()=>{
+      const data = {"idUser": checkUser()}
+      const res = await FetchAPI.postDataAPI("/user/getFullInforUserById",data);
+      setdataUser(res.msg[0])
+    
+  }
+
+  const checkUser = ()=>{
+    if(props.idUser === undefined){
+          const userParam = props.route.params.idUser;           
+          setidUser(userParam)
+          return userParam
+    }else{
+        setidUser(props.idUser);
+        return props.idUser;
     }
 
-    const getInforUser = async()=>{
-        const data = {"idUser": checkUser()}
-        const res = await FetchAPI.postDataAPI("/user/getFullInforUserById",data);
-        setdataUser(res.msg[0])
-        
-    }
+  }
 
-    const checkUser = ()=>{
-        if(props.idUser === undefined){
-            const userParam = props.route.params.idUser;           
-            setidUser(userParam)
-            return userParam
-        }else{
-            setidUser(props.idUser);
-            return props.idUser;
-        }
-
-    }
+  const handleLogout = async()=>{
+    socket.emit("end")
+    await AsyncStorage.removeItem('token');
+    props.navigation.replace('login')
+    ToastAndroid.showWithGravity(
+      "Đăng xuất thành công!",
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+    );
+  }
 
   return (
    
@@ -67,17 +78,22 @@ export default function ProfileScreen(props) {
                   resizeMode='cover'
                   style={styles.imageCover}
               />:
-              <Image source={{ uri: API_URL+dataUser.coverImage }}
+              <Image source={{ uri: API_URL+dataUser.coverImage}}
               resizeMode='cover'
               style={styles.imageCover}
           />
           }
             <Text style={styles.name}>{dataUser.lastName} {dataUser.firstName}</Text>
             {currentUser.idUser === idUser && 
+            <View style={styles.wrapperButton}>
                 <TouchableOpacity style={styles.editProfile}>
                     <Feather name='edit-2' size={20}/>
                     <Text>Chỉnh sửa</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.logOut} onPress={handleLogout}>
+                 <Text style={{color:'white'}}>Đăng xuất</Text>
+                </TouchableOpacity>
+            </View>
             }
             <View style={styles.avatar}>
               {dataUser.avatar === null ? 
@@ -220,17 +236,14 @@ const styles = StyleSheet.create({
   followFriend:{
     width: windowW*0.65,
     height: 40,
-
     flexDirection: 'row',
     justifyContent:'space-between',
     alignContent:'center',
     alignItems:'center',
-
     position:"absolute",
     zIndex:1,
     bottom:95,
     right: 5,
-    
 
   },
   btnFllowFrenid:{
@@ -276,7 +289,6 @@ const styles = StyleSheet.create({
     alignContent:'center',
     alignItems:'center',
     marginBottom: 10,
-  
     shadowColor:'#000',
     shadowOffset:{
       width:2,
@@ -292,11 +304,6 @@ const styles = StyleSheet.create({
     fontWeight:'400'
   },
   editProfile:{
-    position:'absolute',
-    bottom:40,
-    right: 20,
-    zIndex: 1,
-    padding: 5,
     borderRadius: 5,
     backgroundColor:'#DEE1E6',
     flexDirection:'row',
@@ -311,6 +318,33 @@ const styles = StyleSheet.create({
     shadowOpacity:.4,
     shadowRadius:2,
     elevation:4,
+    padding:5
+  },
+  logOut:{
+    borderRadius: 5,
+    backgroundColor:'#3B75DF',
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignContent:'center',
+    alignItems:'center',
+    shadowColor:'#000',
+    shadowOffset:{
+      width:2,
+      height: 3
+    },
+    shadowOpacity:.4,
+    shadowRadius:2,
+    elevation:4,
+    paddingVertical:5,
+    paddingHorizontal:10,
+    marginLeft:10
+  },
+  wrapperButton:{
+    flexDirection:'row',
+    position:'absolute',
+    bottom:40,
+    right: 10,
+    zIndex: 1,
   },
   content:{
     flex: 1,
@@ -318,7 +352,6 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignContent:'center',
     alignItems:'center'
-  }
-
+  },
 
 })

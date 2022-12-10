@@ -1,8 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity,StyleSheet, Image } from 'react-native'
 import React from 'react'
 import { useSelector } from 'react-redux';
-// import {API_URL} from "@env"
-import { API_URL } from '../../util/fetchApi';
+import { API_URL } from '../../util/config';
 import { timeAgo } from '../../util/timeAgo';
 import { LinearTextGradient } from 'react-native-text-gradient';
 export default function NotificationScreen() {

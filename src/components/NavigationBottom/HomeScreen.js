@@ -9,13 +9,14 @@ import Post from '../ScreenComponents/Post';
 import News from '../ScreenComponents/News';
 import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
 import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
+import { updateDataFriend } from '../../../redux/reducers/user.reducer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Facebook } from 'react-content-loader/native';
 // import TruncateText from '../../util/TruncateText';
  function HomeScreen({route, navigation},props) {
   const [showContent, setshowContent] = useState(false);
   const {dataPost, listLike} = useSelector(value=>value.PostReducer)
-  const currentUser = useSelector(value=> value.UserReducer.currentUser)
+  const {currentUser,dataFriend} = useSelector(e=>e.UserReducer);
   const {currentMessenges} = useSelector(e=>e.MessengesReducer);
   const dispath = useDispatch();
   const {socket,item} = route.params;
@@ -34,6 +35,16 @@ import { Facebook } from 'react-content-loader/native';
     }
     
   }, [currentMessenges])
+
+  useEffect(()=>{
+    getDataFriend()
+  },[])
+  const getDataFriend = async()=>{
+    const data = {idUser:currentUser.idUser};
+    const res = await GETAPI.postDataAPI("/user/getFriendById",data);
+    dispath(updateDataFriend(res.msg));
+  }
+
   const getDataPost = async()=>{
       const data = {idUser:currentUser.idUser};
       const res = await GETAPI.postDataAPI("/post/getPostById",data);
@@ -109,7 +120,7 @@ import { Facebook } from 'react-content-loader/native';
         </View>
         <VirtualizedViewFlaslist>
               {/* new */}
-              <News Data={data}/>
+              <News Data={dataFriend}/>
               {/* post */}
               {!showContent ? 
                 <>

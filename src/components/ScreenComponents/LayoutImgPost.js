@@ -10,6 +10,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
       <TouchableOpacity 
           onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
           style={styles.img1}
+          activeOpacity={1}
         >
             <Image
                 source={{ uri: SetHTTP(image[0].url)}}
@@ -23,6 +24,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
         <View style={styles.img2}>
             <TouchableOpacity 
               onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+              activeOpacity={1}
             >
               <Image
                   source={{ uri: SetHTTP(image[0].url)}}
@@ -32,6 +34,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+            activeOpacity={1}
           >
               <Image
                   source={{ uri: SetHTTP(image[1].url)}}
@@ -47,6 +50,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
             <View style={styles.leftImge}>
             <TouchableOpacity 
                 onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                activeOpacity={1}
             >
                   <Image
                     source={{ uri: SetHTTP(image[0].url)}}
@@ -56,6 +60,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={()=>{navigation.navigate("imagedetail",{"image":imagpostDatae})}} 
+                activeOpacity={1}
               >
                       <Image
                         source={{ uri: SetHTTP(image[1].url)}}
@@ -68,6 +73,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
             <View style={styles.rightImge} >
                   <TouchableOpacity 
                       onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                      activeOpacity={1}
                   >
                       <Image
                               source={{ uri: SetHTTP(image[2].url)}}
@@ -85,6 +91,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
             <View style={styles.left4}>
             <TouchableOpacity 
                 onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                activeOpacity={1}
             >
                     <Image
                           source={{ uri: SetHTTP(image[0].url)}}
@@ -94,6 +101,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
             </TouchableOpacity>
             <TouchableOpacity 
                   onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                  activeOpacity={1}
               >
                       <Image
                         source={{ uri: SetHTTP(image[1].url)}}
@@ -105,6 +113,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
             <View style={styles.right4}>
                 <TouchableOpacity 
                     onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                    activeOpacity={1}
                   >
                     <Image
                           source={{ uri: SetHTTP(image[2].url)}}
@@ -114,6 +123,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
                 </TouchableOpacity>
                 <TouchableOpacity 
                     onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                    activeOpacity={1}
                 >
                         <Image
                           source={{ uri: SetHTTP(image[3].url)}}
@@ -129,7 +139,8 @@ export default function LayoutImgPost({image,navigation, postData}) {
         <View style={styles.img4}>
             <View style={styles.left4}>
               <TouchableOpacity 
-                    onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                    onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}}
+                    activeOpacity={1} 
                 >
                   <Image
                         source={{ uri: SetHTTP(image[0].url)}}
@@ -139,6 +150,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
               </TouchableOpacity>
               <TouchableOpacity 
                   onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                  activeOpacity={1}
               >
                       <Image
                         source={{ uri: SetHTTP(image[1].url)}}
@@ -150,6 +162,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
             <View style={styles.right4}>
                 <TouchableOpacity 
                   onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                  activeOpacity={1}
                 >
                     <Image
                           source={{ uri: SetHTTP(image[2].url)}}
@@ -160,6 +173,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
                 <View style={styles.imgmore}>
                     <TouchableOpacity 
                           onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}} 
+                          activeOpacity={1}
                       >
                         <Image
                           source={{ uri: SetHTTP(image[3].url)}}
@@ -169,6 +183,7 @@ export default function LayoutImgPost({image,navigation, postData}) {
                     </TouchableOpacity>
                     <TouchableOpacity 
                         onPress={()=>{navigation.navigate("imagedetail",{"image":postData})}}
+                        activeOpacity={1}
                         style={styles.positionNumberImg}>
                       <Text style={{ color: 'white', fontSize: 24, fontWeight:'bold', backgroundColor: 'transparent'}}>+ {image.length-4}</Text>
                     </TouchableOpacity>

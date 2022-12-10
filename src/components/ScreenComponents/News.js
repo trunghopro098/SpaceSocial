@@ -1,23 +1,22 @@
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 import React, {memo} from 'react'
-import { windowH, windowW } from '../../util/Dimension'
-
+import { SetHTTP } from '../../util/SetHTTP';
+import avatarDefault from '../../../assets/img/avatar.jpg'
 function News({Data}) {
-    
     const renderItem = ({item})=>{
         return(
-            <View style={styles.wrapNews}>
+            <TouchableOpacity style={styles.wrapNews} activeOpacity={.8}>
                 <View style={styles.wrapImage}>
                     {/* {console.log(`${item.image}`)} */}
                     <Image
-                        source={item.image}
+                        source={item.avatar ? {uri : SetHTTP(item.avatar)} : avatarDefault}
                         resizeMode='cover'
                         style={{ width: 50, height:50, borderRadius: 13 }}
                         
                     />
                 </View>
-                <Text style={{ fontWeight:'bold' }}>{item.name}</Text>
-            </View>
+                <Text style={{ fontWeight:'bold' }}>{`${item.lastName}`}</Text>
+            </TouchableOpacity>
  
         )
     }
@@ -48,8 +47,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         justifyContent: 'center',
         alignItems: 'center',
-
-        
     },
     wrapImage:{
         width:65,
@@ -58,8 +55,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 0.5,
-        borderColor:'#C1C1C1',
-        borderRadius:24
+        borderWidth: 1,
+        borderColor:'rgba(210, 215, 211,1)',
+        borderRadius:15
     }
 })
