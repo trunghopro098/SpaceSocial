@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, Alert, SafeAreaView } from 'react-native'
+import { View, Text, StatusBar, StyleSheet, TouchableOpacity, Image, FlatList, TextInput, Alert, SafeAreaView, Platform } from 'react-native'
 import React,{useEffect, useRef, useState} from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { SetHTTP } from '../../util/SetHTTP';
@@ -388,14 +388,14 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 60,
         paddingHorizontal: 10,
-        shadowColor:'#000',
+        shadowColor:Platform.OS === 'ios' ? null : '#000',
         shadowOffset:{
             width: 0,
-            height: 2
+            height: Platform.OS ? 0 : 2
          },
-         shadowOpacity: .5,
-         shadowRadius :3,
-         elevation: 3,
+         shadowOpacity: Platform.OS === 'ios' ? 0:.5,
+         shadowRadius : Platform.OS === 'ios' ? 0 : 3,
+         elevation: Platform.OS === 'ios' ? 0 : 3,
          flexDirection:'row',
          justifyContent:'space-between',
          alignContent:'center',

@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity,StyleSheet, Image, SafeAreaView } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity,StyleSheet, Image, SafeAreaView, Platform } from 'react-native'
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../util/config';
