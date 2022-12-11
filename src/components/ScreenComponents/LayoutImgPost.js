@@ -4,7 +4,6 @@ import { SetHTTP } from '../../util/SetHTTP'
 import { windowH, windowW } from '../../util/Dimension'
 
 export default function LayoutImgPost({image,navigation, postData}) {
-  
   const Layout1 = ()=>
     (
       <TouchableOpacity 

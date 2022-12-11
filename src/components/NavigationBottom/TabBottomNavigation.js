@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet,Dimensions,StatusBar,SafeAreaView} from 'react-native';
+import {View, Text, StyleSheet,Dimensions,StatusBar,Badge} from 'react-native';
 import {createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from './HomeScreen';
 import ChatScreen from './ChatScreen';
@@ -49,7 +49,7 @@ export default function TabBottomNavigation({route, navigation}) {
         dispatch(updateDataNotification(res.msg));
     } 
     return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
         <StatusBar 
             backgroundColor="rgb(240, 240, 240)"
             barStyle="dark-content"
@@ -177,14 +177,35 @@ export default function TabBottomNavigation({route, navigation}) {
                                         <Text style={{ fontSize : 12 }}>Thông Báo</Text>
                                 </LinearTextGradient>
                             </>:
-
-                            <Ionicons name="notifications-outline" size={22} />
+                            <View
+                                style={{
+                                    position:'relative'
+                                }}
+                            >
+                                <Ionicons name="notifications-outline" size={22} />
+                                {quantityNotificationUnread > 0 &&
+                                <View 
+                                    style={{
+                                        backgroundColor:'red',
+                                        borderRadius:15,
+                                        padding:2,
+                                        width:20,
+                                        height:20,
+                                        position:'absolute',
+                                        right:-5,
+                                        top: -10
+                                    }}
+                                >
+                                    <Text style={{textAlign:'center',color:'white'}}>{quantityNotificationUnread}</Text>
+                                </View>
+                                }
+                            </View> 
                             }
                             
                         </View>
                         )
                     },
-                    tabBarBadge: quantityNotificationUnread 
+                    // tabBarBadge: quantityNotificationUnread 
                 }}
             />
             <Tab.Screen name='Acount' component={AcountScreen}
@@ -217,7 +238,7 @@ export default function TabBottomNavigation({route, navigation}) {
             />
 
         </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   )
 }
 const widthW = Dimensions.get('window').width;

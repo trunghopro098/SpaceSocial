@@ -1,14 +1,12 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList,StatusBar,SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList,StatusBar,SafeAreaView, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import * as fecthAPI from '../../util/fetchApi';
-import { updateListRoom } from '../../../redux/reducers/messenges.reducer';
 import { windowW } from '../../util/Dimension';
 import { SetHTTP } from '../../util/SetHTTP';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { deCode } from '../../util/crypto';
-import { timeAgo } from '../../util/timeAgo';
+import TimeAgoScreen from '../ComponentUtils/TimAgoScreen';
 import VirtualizedViewFlaslist from '../../util/VituallizedViewFlast';
 import { LinearTextGradient } from 'react-native-text-gradient';
 
@@ -17,7 +15,6 @@ export default function ChatScreen({navigation}) {
   const {currentUser,userOnline} = useSelector((value)=>value.UserReducer);
   const {listRoom} = useSelector((value)=>value.MessengesReducer);
   const [ListRoomToShow, setListRoomToShow] = useState([])
-  const [CurrentTime, setCurrentTime] = useState(0);
   // const dispath = useDispatch();
 
 
@@ -26,16 +23,6 @@ export default function ChatScreen({navigation}) {
       setListRoomToShow(listRoom);
       // console.log(listRoom)
   }, [listRoom])
-  useEffect(() => {
-    const interval = setInterval(() => {
-        setCurrentTime(Date.now())
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    }
-  }, [])
-
 
   const renderItem = ({item})=>{
     return(
@@ -44,7 +31,7 @@ export default function ChatScreen({navigation}) {
             onPress={()=>{
               navigation.navigate('chatdetail',{item: item})
             }}
-            style={styles.chatItem}
+            style={Platform.OS === "ios" ? {...styles.chatItem,marginVertical:5} :{...styles.chatItem}}
           >
             <View style={styles.avatarChatItem}>
               {item.type===1 ? 
@@ -106,10 +93,7 @@ export default function ChatScreen({navigation}) {
                       </View>
 
                   </View>
-                      
-                  <View style={styles.dateRoomchat}>
-                      <Text style={{ marginTop: 25 }}>{timeAgo(CurrentTime, item.update_at)}</Text>
-                  </View>
+                  <TimeAgoScreen time={item.update_at} style={{color:'gray'}}/>
             </View>
         </TouchableOpacity>
       </SafeAreaView>
@@ -117,7 +101,7 @@ export default function ChatScreen({navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
           <StatusBar 
             backgroundColor={'white'}
             barStyle={'dark-content'}
@@ -176,7 +160,7 @@ export default function ChatScreen({navigation}) {
                   style={{flex:1}}
               />
           </VirtualizedViewFlaslist>
-    </View>
+    </SafeAreaView>
   )
 }
 

@@ -1,9 +1,10 @@
-import { View, Text, FlatList, TouchableOpacity,StyleSheet, Image } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity,StyleSheet, Image, SafeAreaView } from 'react-native'
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { API_URL } from '../../util/config';
 import { timeAgo } from '../../util/timeAgo';
 import { LinearTextGradient } from 'react-native-text-gradient';
+import TimeAgoScreen from '../ComponentUtils/TimAgoScreen';
 export default function NotificationScreen() {
   const {dataNotification} = useSelector(e=>e.NotificationReducer);
   const [currentTime, setCurrentTime] = React.useState(new Date());
@@ -33,26 +34,31 @@ export default function NotificationScreen() {
         </View>
         <View
           style={{
+            flex:1,
             flexDirection:'column',
             justifyContent: 'space-between'
           }}
         >
           <View 
             style={{
-              flexDirection:'row'
+              flex:1,
+              flexDirection:'row',
+              flexWrap:'wrap',
             }}
           >
-            <Text style={{fontWeight:'bold',marginRight:5}}>{`${item.firstName} ${item.lastName}`}</Text>
-            <Text>{item.description}</Text>
+            <Text style={{flex:1,flexWrap:'wrap'}}>
+              <Text style={{fontWeight:'bold',marginRight:5}}>{`${item.firstName} ${item.lastName} `}</Text>
+              <Text>{`${item.description}`}</Text>
+            </Text>
           </View>
-          <Text style={{color:'gray'}}>{timeAgo(currentTime,item.create_at)}</Text>
+          <TimeAgoScreen time={item.create_at} style={{color:'gray'}}/>
         </View>
       </TouchableOpacity>
     )
   }
   
   return (
-    <View>
+    <SafeAreaView>
       <LinearTextGradient
         locations={[0,1]}
         colors={['red','blue']}
@@ -75,7 +81,7 @@ export default function NotificationScreen() {
         renderItem={renderItem}
         contentContainerStyle={{paddingBottom:"28%"}}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 

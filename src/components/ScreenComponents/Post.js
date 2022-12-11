@@ -1,8 +1,7 @@
 import { View, Text,FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React,{memo, useState} from 'react'
 import { windowH, windowW } from '../../util/Dimension'
-import { SetHTTP } from '../../util/SetHTTP'
-import {API_URL} from "@env"
+import { API_URL } from '../../util/config'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -10,12 +9,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { timeAgo } from '../../util/timeAgo';
 import LayoutImgPost from '../../components/ScreenComponents/LayoutImgPost'
 import SubStr from '../StartScreens/SubStr'
 import ShowIcon from './ShowIcon'
 import * as GETAPI from '../../util/fetchApi'; 
-
+import TimeAgoScreen from '../ComponentUtils/TimAgoScreen';
 
 function Post(props) {
 
@@ -24,7 +22,6 @@ function Post(props) {
     const [showIcon, setshowIcon] = useState(false);
     const [idPost, setidPost] = useState();
     const DataPost = props.DataPost;
-    const CurrentDay = Date.now();
 
     const handleComent = (id)=>{
         setShowComent(true)
@@ -103,7 +100,10 @@ function Post(props) {
                                     flexDirection:'row',
                                     justifyContent: 'flex-start'
                                   }}>
-                                <Text style={{ color:'grey',fontSize: 11 }}>{timeAgo(CurrentDay,item.create_at)} </Text>
+                                {/* <Text style={{ color:'grey',fontSize: 11 }}>{timeAgo(CurrentDay,item.create_at)} </Text> */}
+                                <View>
+                                <TimeAgoScreen time={item.create_at} style={{color:'gray'}}/>
+                                </View>
                                 <TouchableOpacity>
                                     <MaterialIcons name='public' size={16} color={'grey'}/>
                                 </TouchableOpacity>

@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid, Platform } from 'react-native'
 import React, { useEffect,useState } from 'react'
 import * as FetchAPI from "../../util/fetchApi";
 import { SetHTTP } from '../../util/SetHTTP';
@@ -173,7 +173,7 @@ export default function ProfileScreen(props) {
         </View> 
         <View style={styles.content}>
              {showMenu ===1 && <Post DataPost={dataPostOfUser} navigation={navigation}/>}
-             {showMenu ===2 && <View><Text>đay là gioi thieu</Text></View>}
+             {showMenu ===2 && <View><Text style={{marginTop:10}}>Screen is developing ...</Text></View>}
              {showMenu ===3 && <FriendUser idUser ={idUser} navigation={navigation} />}
              {showMenu ===4 && <ImageProfile idUser ={idUser} navigation={navigation}/>}
              {showMenu ===5 && <Qrcode idUser={idUser}/>}
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     shadowOpacity: .4,
     shadowRadius: 5,
     elevation: 2,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
 
   imageCover:{
@@ -291,10 +291,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     shadowColor:'#000',
     shadowOffset:{
-      width:2,
-      height:3
+      width: Platform.OS === "ios" ? 0 : 2,
+      height: Platform.OS === "ios" ? 0 : 3
     },
-    shadowOpacity:6,
+    shadowOpacity: Platform.OS === "ios" ? 0.2 : 6,
     shadowRadius: 5,
     elevation: 5,
     backgroundColor:'white'

@@ -1,8 +1,8 @@
-import { View, Text,FlatList, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text,FlatList, StyleSheet, Image, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import React,{memo} from 'react'
 import { windowH, windowW } from '../../util/Dimension'
 import { SetHTTP } from '../../util/SetHTTP'
-import {API_URL} from "@env"
+import { API_URL } from '../../util/config'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         padding: 10,
         marginBottom:10,
-        
+        paddingTop: Platform.OS == "ios" ? 50 : null
     },
     avatar:{
         width: 60,
