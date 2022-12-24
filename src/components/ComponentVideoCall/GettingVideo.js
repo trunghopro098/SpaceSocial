@@ -20,7 +20,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { updateIdRoomCall, updateMessenges, updateStatusCall, updateVisibleCall } from '../../../redux/reducers/messenges.reducer';
 import * as FetchAPI from '../../util/fetchApi';
-
+import { IP_LOCAL } from "../../util/config";
 // const Peer = require('simple-peer');
 function GettingVideo({route, navigation}){
     const {currentUser} = useSelector(e=>e.UserReducer);
@@ -167,16 +167,24 @@ function GettingVideo({route, navigation}){
                 stream: stream,
                 config: {
                   iceServers: [
-                    {
-                      urls: "stun:numb.viagenie.ca",
-                      credential: "128Dat128",
-                      username: "kennavi281@gmail.com",
-                    },
-                    {
-                        urls: "turn:numb.viagenie.ca",
-                        credential: "128Dat128",
-                        username: "kennavi281@gmail.com",
-                    },
+                      {
+                        urls:`stun:${IP_LOCAL}:3478`
+                      },
+                      {
+                        urls: `turn:${IP_LOCAL}:3478`,
+                        username: "chien",
+                        credential: "123456"
+                      }
+                    // {
+                    //   urls: "stun:numb.viagenie.ca",
+                    //   credential: "128Dat128",
+                    //   username: "kennavi281@gmail.com",
+                    // },
+                    // {
+                    //     urls: "turn:numb.viagenie.ca",
+                    //     credential: "128Dat128",
+                    //     username: "kennavi281@gmail.com",
+                    // },
                     // { urls: 'stun:stun.l.google.com:19302' }, 
                     // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
                   ],
@@ -276,9 +284,12 @@ function GettingVideo({route, navigation}){
                 config: {
                     iceServers: [
                       {
-                        urls: "turn:numb.viagenie.ca",
-                        credential: "muazkh",
-                        username: "webrtc@live.com",
+                        urls:`stun:${IP_LOCAL}:3478`
+                      },
+                      {
+                        urls: `turn:${IP_LOCAL}:3478`,
+                        username: "chien",
+                        credential: "123456"
                       }
                       // {
                       //   urls:"stun:192.168.43.91:3478"
