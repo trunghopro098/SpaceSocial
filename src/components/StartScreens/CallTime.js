@@ -14,7 +14,7 @@ export default function CallTime({times}) {
 
   return (
 
-      <Text style={{ color: 'white', marginTop: 5, fontSize:12 }}>{hour} giờ : {mins} phút : {second} giây</Text>
+    <Text style={{ color: 'white', textAlign:'center', fontSize:12 }}>{hour} giờ : {mins} phút : {second} giây</Text>
   
   )
 }

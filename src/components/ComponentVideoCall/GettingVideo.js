@@ -21,6 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { updateIdRoomCall, updateMessenges, updateStatusCall, updateVisibleCall } from '../../../redux/reducers/messenges.reducer';
 import * as FetchAPI from '../../util/fetchApi';
 import { IP_LOCAL } from "../../util/config";
+import CallTime from "../StartScreens/CallTime";
 // const Peer = require('simple-peer');
 function GettingVideo({route, navigation}){
     const {currentUser} = useSelector(e=>e.UserReducer);
@@ -175,16 +176,6 @@ function GettingVideo({route, navigation}){
                         username: "chien",
                         credential: "123456"
                       }
-                    // {
-                    //   urls: "stun:numb.viagenie.ca",
-                    //   credential: "128Dat128",
-                    //   username: "kennavi281@gmail.com",
-                    // },
-                    // {
-                    //     urls: "turn:numb.viagenie.ca",
-                    //     credential: "128Dat128",
-                    //     username: "kennavi281@gmail.com",
-                    // },
                     // { urls: 'stun:stun.l.google.com:19302' }, 
                     // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
                   ],
@@ -291,24 +282,6 @@ function GettingVideo({route, navigation}){
                         username: "chien",
                         credential: "123456"
                       }
-                      // {
-                      //   urls:"stun:192.168.43.91:3478"
-                      // },
-                      // {
-                      //   urls: "turn:192.168.43.91:3478",
-                      //   username: "chien",
-                      //   credential: "123456"
-                      // }
-                        // {
-                        //     urls: "stun:numb.viagenie.ca",
-                        //     credential: "128Dat128",
-                        //     username: "kennavi281@gmail.com",
-                        // },
-                        // {
-                        //     urls: "turn:numb.viagenie.ca",
-                        //     credential: "128Dat128",
-                        //     username: "kennavi281@gmail.com",
-                        // },
                     //   {
                     //     urls: "turn:numb.viagenie.ca",
                     //     credential: "muazkh",
@@ -442,6 +415,10 @@ function GettingVideo({route, navigation}){
               backgroundColor={'white'}
               barStyle={'dark-content'}/>
               <View style={{position:'relative'}}>
+                <View style={styles.wrapperTrackCallTime}>
+                    {/* <Text style={{color:'white',textAlign:'center'}}>00:00:00</Text> */}
+                    <CallTime times={totalTime}/>
+                </View>
                 {callAccepted &&
                 <>
                 <View>
@@ -651,6 +628,15 @@ var styles = StyleSheet.create({
       fontSize:16,
       fontWeight:'400',
       marginRight:10
+    },
+    wrapperTrackCallTime:{
+      width: 130,
+      height: 20,
+      backgroundColor:'#009933',
+      position:'absolute',
+      top:10,
+      left:20,
+      borderRadius: 15
     }
   });
 export default GettingVideo;

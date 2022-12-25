@@ -109,6 +109,7 @@ export default function ProfileScreen(props) {
                 />
               }
             </View>
+            {currentUser?.idUser != idUser &&
               <View style={styles.followFriend}>
                   
                       <TouchableOpacity style={styles.btnFllowFrenid}>
@@ -120,6 +121,7 @@ export default function ProfileScreen(props) {
                           <Text style={{ ...styles.text, fontSize: 12 }}>Đang theo dõi</Text>
                       </TouchableOpacity>
               </View>
+              }
 
               <View style={styles.menu}>
     

@@ -59,7 +59,7 @@ function App(){
       >
         <Stack.Screen name='videocall' component={GettingVideo} initialParams={{socket:socket}}/>
         <Stack.Screen name='login' component={Login}/>
-        <Stack.Screen name='profile' component={ProfileScreen} initialParams={{socket:socket}}/>
+        <Stack.Screen name='profile' component={ProfileScreen} initialParams={{socket:socket}} options={{headerShown:true,headerTitle:'Hồ sơ cá nhân',headerBackTitle:'Trang chủ'}}/>
         <Stack.Screen name='splash' component={Splash}/>
         <Stack.Screen name='home' component={TabBottomNavigation} initialParams={{socket:socket}}/>
         <Stack.Screen name='register' component={Register} options={{headerShown:true,title:"Đăng ký"}}/>
